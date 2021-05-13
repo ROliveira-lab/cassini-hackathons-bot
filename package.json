@@ -1,0 +1,12 @@
+{
+  "name": "cassini-hackathons-bot",
+  "version": "1.0.0",
+  "description": "A Discord bot that helps with the administration of the CASSINI Hackathons.",
+  "author": "Benoit De Vrieze",
+  "license": "MIT",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^9.0.0"
+  }
+}
