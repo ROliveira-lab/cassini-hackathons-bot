@@ -63,12 +63,12 @@ module.exports = (token, prefix, countries) => {
       if (!country) { return null; }
       member.guild.roles.fetch().then(roles => {
         var visitorrole = roles.cache.find(role => role.name === "Visitor");
-        var localvisitorrole = roles.cache.find(role => role.name.startsWith("Visitor") && role.name.endsWith(country));
-        member.roles.add(visitorrole);
-        member.roles.add(localvisitorrole);
-        crewchannel = invite.channel.parent.children.find(channel => channel.name.startsWith(country.toLowerCase()) && channel.name.endsWith("crew"));
-        crewchannel.send(`${member} joined the server and was assigned the ${visitorrole} and ${localvisitorrole} roles.`);
-        member.send(`Welcome to the ${member.guild} server. You have been assigned the ${visitorrole.name} and ${localvisitorrole.name} roles.`)
+        var localvisitorrole = roles.cache.find(role => role.name === ["Visitor", country].join(' '));
+        if (visitorrole) { member.roles.add(visitorrole); }
+        if (localvisitorrole) { member.roles.add(localvisitorrole); }
+        crewchannel = invite.channel.parent.children.find(channel => channel.name === country.toLowerCase().split(' ').concat("crew").join('-'));
+        if (crewchannel) { crewchannel.send(`${member} joined the server and was assigned the ${visitorrole} and ${localvisitorrole} roles.`); }
+        member.send(`Welcome to the ${member.guild} server. You have been assigned the ${visitorrole ? visitorrole.name : undefined} and ${localvisitorrole ? localvisitorrole.name : undefined} roles.`)
       }).catch(console.error);
     }).catch(console.error);
   });
