@@ -67,8 +67,8 @@ module.exports = (token, prefix, countries) => {
         member.roles.add(visitorrole);
         member.roles.add(localvisitorrole);
         crewchannel = invite.channel.parent.children.find(channel => channel.name.startsWith(country.toLowerCase()) && channel.name.endsWith("crew"));
-        crewchannel.send(`${member} joined the server and was assigned ${visitorrole} and ${localvisitorrole} roles.`);
-        member.send(`Welcome to the ${member.guild} server. You have been assigned ${visitorrole} and ${localvisitorrole} roles.`)
+        crewchannel.send(`${member} joined the server and was assigned the ${visitorrole} and ${localvisitorrole} roles.`);
+        member.send(`Welcome to the ${member.guild} server. You have been assigned the ${visitorrole.name} and ${localvisitorrole.name} roles.`)
       }).catch(console.error);
     }).catch(console.error);
   });
