@@ -24,16 +24,21 @@ module.exports = (model) => {
     let groups = []
     groups = invites.reduce((groups, invite) => {
       let category = invite.channel.parent;
-      groups[category.position] = { name: category.name, invites: [] };
+      groups[category.position] = { category, invites: [] };
       return groups;
     }, groups);
     groups = invites.reduce((groups, invite) => {
       let category = invite.channel.parent;
-      let channel = invite.channel;
-      groups[category.position].invites[channel.position] = invite;
+      groups[category.position].invites.push(invite);
       return groups;
     }, groups);
-    return groups.filter(group => group != undefined).map(group => ({ name: group.name, invites: group.invites.filter(invite => invite != undefined) }));
+    groups = groups.filter(group => group != undefined);
+    groups = groups.map(group => { group.invites.sort((a, b) => a.channel.position - b.channel.position); return group });
+    return groups;
+  }
+
+  function formatcategory(category) {
+    return `**${category.name}**`;
   }
 
   function formatinvite(invite) {
@@ -43,7 +48,7 @@ module.exports = (model) => {
   var invites = (message, command, args) => {
     let invites = model.findinvitesforguild(message.guild);
     let groups = groupinvitesbycategory(invites);
-    message.channel.send(groups.map(group => [`**${group.name}**`, ...group.invites.map(formatinvite), ""]).flat());
+    message.channel.send(groups.map(group => [formatcategory(group.category), ...group.invites.map(formatinvite), ""]).flat());
   }
 
   return { ping, sum, where, self, invites }
