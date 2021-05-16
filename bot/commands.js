@@ -20,9 +20,30 @@ module.exports = (model) => {
     message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}`);
   }
 
+  function groupinvitesbycategory(invites) {
+    let groups = []
+    groups = invites.reduce((groups, invite) => {
+      let category = invite.channel.parent;
+      groups[category.position] = { name: category.name, invites: [] };
+      return groups;
+    }, groups);
+    groups = invites.reduce((groups, invite) => {
+      let category = invite.channel.parent;
+      let channel = invite.channel;
+      groups[category.position].invites[channel.position] = invite;
+      return groups;
+    }, groups);
+    return groups.filter(group => group != undefined).map(group => ({ name: group.name, invites: group.invites.filter(invite => invite != undefined) }));
+  }
+
+  function formatinvite(invite) {
+    return `${invite.code} ➜ ${invite.channel} (${invite.uses} uses)`;
+  }
+
   var invites = (message, command, args) => {
-    const guildinvites = model.allinvites.get(message.guild.id) || new Collection();
-    message.channel.send(guildinvites.map(invite => `${invite.code} --> ${invite.channel} (${invite.uses} uses)`));
+    let invites = model.findinvitesforguild(message.guild);
+    let groups = groupinvitesbycategory(invites);
+    message.channel.send(groups.map(group => [`**${group.name}**`, ...group.invites.map(formatinvite), ""]).flat());
   }
 
   return { ping, sum, where, self, invites }
