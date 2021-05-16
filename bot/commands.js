@@ -42,7 +42,7 @@ module.exports = (model) => {
   }
 
   function formatinvite(invite) {
-    return `${invite.code} ➜ ${invite.channel} (${invite.uses} uses)`;
+    return `${invite.code} ➜ ${invite.channel} by ${invite.inviter} (${invite.uses} uses)`;
   }
 
   var invites = (message, command, args) => {
