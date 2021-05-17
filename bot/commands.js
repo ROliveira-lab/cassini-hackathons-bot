@@ -21,18 +21,18 @@ module.exports = (model) => {
   }
 
   function groupinvitesbycategory(invites) {
-    let groups = []
+    let groups = {}
     groups = invites.reduce((groups, invite) => {
       let category = invite.channel.parent;
-      groups[category.position] = { category, invites: [] };
+      groups[category.name] = { category, invites: [] };
       return groups;
     }, groups);
     groups = invites.reduce((groups, invite) => {
       let category = invite.channel.parent;
-      groups[category.position].invites.push(invite);
+      groups[category.name].invites.push(invite);
       return groups;
     }, groups);
-    groups = groups.filter(group => group != undefined);
+    groups = Object.values(groups).sort((a, b) => a.category.position - b.category.position);
     groups = groups.map(group => { group.invites.sort((a, b) => a.channel.position - b.channel.position); return group });
     return groups;
   }
