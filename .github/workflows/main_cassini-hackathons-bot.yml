@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://go.microsoft.com/fwlink/?linkid=2134798
 # More GitHub Actions for Azure: https://go.microsoft.com/fwlink/?linkid=2135048
 
-name: Azure App Service - cassini-hackathons-bot(Production), Build and deploy NodeJS app
+name: Build and deploy to Azure App Service (Production)
 
 on:
   push:
@@ -13,23 +13,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # checkout the repo
-    - name: 'Checkout Github Action'
+    - name: 'Checkout Github repository'
       uses: actions/checkout@master
 
 
     - name: Set up Node.js version
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: '14.x'
 
-    - name: npm install, build, and test
+    - name: Run npm install, build, and test
       run: |
         npm install
         npm run build --if-present
         npm run test --if-present
 
-    - name: Run Azure webapp deploy action using publish profile credentials
+    - name: Deploy webapp using publish profile credentials
       uses: azure/webapps-deploy@v2
       with:
         app-name: cassini-hackathons-bot
