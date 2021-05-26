@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
   
-async function createmailerlitewebhooks() {
+async function createmailerlitewebhooks(reset = false) {
 
   const mailerlite = require("../services/mailerlite");
 
@@ -14,10 +14,14 @@ async function createmailerlitewebhooks() {
     
   let endpointurl = `https://${process.env.WEBSITE_HOSTNAME}/webhooks/mailerlite/events`;
 
-  let oldwebhooks = await mailerlite.getwebhooks();
+  if (reset) {
 
-  for (let webhook of oldwebhooks) {
-    await mailerlite.deletewebhook(webhook.id).then(() => { console.log(`Webhook ${webhook.url} deleted for event ${webhook.event}`); });
+    let oldwebhooks = await mailerlite.getwebhooks();
+
+    for (let webhook of oldwebhooks) {
+      await mailerlite.deletewebhook(webhook.id).then(() => { console.log(`Webhook ${webhook.url} deleted for event ${webhook.event}`); });
+    }
+    
   }
 
   for (let event of events) {
@@ -27,7 +31,7 @@ async function createmailerlitewebhooks() {
 }
 
 async function run() {
-  await createmailerlitewebhooks();
+  await createmailerlitewebhooks(true);
 }
 
 module.exports = run();

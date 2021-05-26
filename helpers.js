@@ -1,12 +1,7 @@
-function buildmap(entities) {
-  return entities.reduce((result, entity) => ({ ...result, [entity.id]: entity }), {});
-}
-
-function findbyid(entities, id) {
-  return entities.find((entity) => entity.id === id);
+function todictionary(entities, keyfunction) {
+  return entities.reduce((result, entity) => ({ ...result, [keyfunction(entity)]: entity }), {});
 }
 
 module.exports = {
-  buildmap,
-  findbyid
+  todictionary
 }

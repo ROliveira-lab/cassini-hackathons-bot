@@ -4,8 +4,6 @@ dotenv.config();
 
 const mailerlite = require("../services/mailerlite");
 const eventtia = require("../services/eventtia");
-const website = require("../services/website");
-const eventplatform = require("../services/eventplatform");
 
 async function registerattendeestoactivities(attendees, activities) {
   
@@ -15,21 +13,21 @@ async function registerattendeestoactivities(attendees, activities) {
   for (let attendee of attendees) {
 
     let currentactivities = await eventtia.getattendeeactivities(attendee.id);
-    let localactivities = activities.filter((activity) => activity.attributes.show_on_register && (attendee.relationships.attendee_type.data.id in activity.attributes.price));
+    let localactivities = activities.filter((activity) => activity.canregister(attendee));
 
     currentactivityids = currentactivities.map((activity) => activity.id);
     localactivityids = localactivities.map((activity) => activity.id);
 
-    let unregisterids = currentactivityids.filter((id) => !localactivityids.includes(id));
-    for (let activityid of unregisterids) {
-      console.log(`Unregister attendee ${attendee.id} for activity ${activityid}`);
-      await eventtia.unregisterattendeeforactivity(attendee.id, activityid);
+    let unregisterfor = currentactivities.filter((a) => !localactivityids.includes(a.id));
+    for (let activity of unregisterfor) {
+      console.log(`Unregister attendee ${attendee.id} for activity ${activity.id}`);
+      await eventtia.unregisterattendeeforactivity(attendee, activity);
     }
 
-    let registerids = localactivityids.filter((id) => !currentactivityids.includes(id));
-    for (let activityid of registerids) {
-      console.log(`Register attendee ${attendee.id} for activity ${activityid}`);
-      await eventtia.registerattendeeforactivity(attendee.id, activityid);
+    let registerfor = localactivities.filter((a) => !currentactivityids.includes(a.id));
+    for (let activity of registerfor) {
+      console.log(`Register attendee ${attendee.id} for activity ${activity.id}`);
+      await eventtia.registerattendeeforactivity(attendee, activity);
     }
 
   }
@@ -40,7 +38,6 @@ async function addwebsitesubscriberstoeventplatform() {
 
   let subscribers = await mailerlite.getsubscribers();
   let currentattendees = await eventtia.getattendees();
-  let currentattendeeemails = currentattendees.map(a => Object.values(a.attributes.fields)[2]);
   
   let newattendees = [];
 
@@ -48,11 +45,11 @@ async function addwebsitesubscriberstoeventplatform() {
     
     console.log(`Subscriber ${subscriber.email} found on the website.`);
 
-    if (website.isactive(subscriber) && website.isconsented(subscriber)) {
+    if (subscriber.isactive && subscriber.isconsented) {
 
-      if (!currentattendeeemails.includes(subscriber.email)) {
+      if (!currentattendees.find((attendee) => attendee.email === subscriber.email)) {
         console.log(`Create registration for ${subscriber.email} on the event platform.`);
-        let attendee = await eventplatform.createregistration(website.transform(subscriber));
+        let attendee = await eventtia.registerattendee(subscriber);
         newattendees.push(attendee);
       }
 

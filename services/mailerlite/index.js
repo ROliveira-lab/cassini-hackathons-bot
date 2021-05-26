@@ -1,5 +1,8 @@
 const axios = require("axios");
 
+const { Subscriber } = require("./model");
+
+
 const mailerliteapi = axios.create({ baseURL: "https://api.mailerlite.com/api/v2/", headers: { "X-MailerLite-ApiKey": process.env.MAILERLITE_API_KEY } });
 
 // Groups
@@ -23,27 +26,27 @@ async function getgroupbyname(groupname) {
 
 async function getsubscribers(type = "active") {
   let response = await mailerliteapi.get(`/subscribers`, { params: { offset: 0, limit: 5000, type } });
-  return response?.data;
+  return response ? response.data.map(item => new Subscriber(item)) : undefined;
 }
 
 async function getsubscribersingroup(groupid, type = "active") {
   let response = await mailerliteapi.get(`/groups/${groupid}/subscribers`, { params: { offset: 0, limit: 5000, type } });
-  return response?.data;
+  return response ? response.data.map(item => new Subscriber(item)) : undefined;
 }
 
 async function getsubscriber(subscriberidoremail) {
   let response = await mailerliteapi.get(`/subscribers/${subscriberidoremail}`);
-  return response?.data;
+  return response ? new Subscriber(response.data) : undefined;
 }
 
 async function updatesubscriber(subscriberidoremail, subscriber) {
   let response = await mailerliteapi.put(`/subscribers/${subscriberidoremail}`, subscriber);
-  return response?.data;
+  return response ? new Subscriber(response.data) : undefined;
 }
 
 async function createsubscriber(subscriber) {
   let response = await mailerliteapi.post(`/subscribers`, subscriber);
-  return response?.data;
+  return response ? new Subscriber(response.data) : undefined;
 }
 
 // Webhooks

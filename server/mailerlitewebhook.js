@@ -1,35 +1,37 @@
 const { Router } = require("express");
 
-const website = require("../services/website");
-const eventplatform = require("../services/eventplatform");
+const eventtia = require("../services/eventtia");
+
+const { Subscriber } = require("../services/mailerlite/model");
 
 module.exports = () => {
 
   const router = Router();
 
   async function handlesubscribercreate(subscriber) {
-    let registration = website.transform(subscriber);
-    console.log(`${registration.firstname} ${registration.lastname} (${registration.email}) subscribed`);
+    console.log(`${subscriber.firstname} ${subscriber.lastname} (${subscriber.email}) subscribed`);
   }
 
   async function handlesubscriberupdate(subscriber) {
+    console.log(`${subscriber.firstname} ${subscriber.lastname} (${subscriber.email}) updated`);
 
-    if (website.isactive(subscriber) && website.isconsented(subscriber)) {
+    if (subscriber.isactive && subscriber.isconsented) {
 
       console.log(`Find registration for ${subscriber.email} on the event platform.`);
-      let registration = await eventplatform.findregistration(subscriber.email);
+      let attendee = await eventtia.getattendeebyemail(subscriber.email);
 
-      if (!registration) {
-        console.log(`Create registration for ${subscriber.email} on the event platform.`);
-        await eventplatform.createregistration(website.transform(subscriber), true);
+      if (!attendee) {
+        console.log(`Create registration for ${subscriber.email} on the event platform and register for all activities.`);
+        let activities = await eventtia.getactivitiesforlocation(subscriber.location);
+        attendee = await eventtia.registerattendee(subscriber, activities);
       }
+
     }
 
-}
+  }
 
   async function handlesubscriberunsubscribe(subscriber) {
-    let registration = website.transform(subscriber);
-    console.log(`${registration.firstname} ${registration.lastname} (${registration.email}) unsubscribed`);
+    console.log(`${subscriber.firstname} ${subscriber.lastname} (${subscriber.email}) unsubscribed`);
   }
 
   const eventhandlers = {
@@ -41,7 +43,7 @@ module.exports = () => {
   router.post("/events", async (req, res) => {
     for (let event of req.body.events) {
       console.log(`Event ${event.type} for subscriber ${event.data.subscriber.email} received.`);
-      // eventhandlers[event.type](event.data.subscriber)
+      // eventhandlers[event.type](new Subscriber(event.data.subscriber));
     }
     res.status(200).json({ status: "OK" });
   });
