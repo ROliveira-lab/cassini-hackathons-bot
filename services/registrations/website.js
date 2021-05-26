@@ -1,8 +1,6 @@
 const cassini = require("../cassini");
 const mailerlite = require("../mailerlite");
 
-const { WebsiteRegistration } = require("./model");
-
 // Website registrations
 
 async function getregistrations(location = undefined) {

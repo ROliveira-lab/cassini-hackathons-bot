@@ -14,7 +14,7 @@ class Event {
     return this.event.attributes.name;
   }
 
-  get uri() {
+  get slug() {
     return this.event.attributes.event_uri;
   }
 
