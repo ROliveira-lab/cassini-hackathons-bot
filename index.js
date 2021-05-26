@@ -2,6 +2,6 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-require("./bot")(process.env.TOKEN);
+const bot = require("./bot")();
 
-require("./server")(process.env.PORT || 3000);
+const server = require("./server")();

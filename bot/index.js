@@ -4,7 +4,7 @@ const { capitalCase, paramCase } = require("change-case");
 
 const prefix = "!";
 
-module.exports = (token) => {
+module.exports = () => {
 
   const client = new Client();
 
@@ -126,6 +126,6 @@ module.exports = (token) => {
     }
   });
 
-  client.login(token);
+  client.login(process.env.TOKEN);
 
 }

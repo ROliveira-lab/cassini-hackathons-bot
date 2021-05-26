@@ -9,7 +9,14 @@
   },
   "license": "MIT",
   "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "prestart": "node ./scripts/createwebhooks.js",
+    "sync": "node ./scripts/synchronize.js"
+  },
   "dependencies": {
+    "axios": "^0.21.1",
+    "axios-logger": "^2.5.0",
     "change-case": "^4.1.2",
     "discord.js": "^12.5.3",
     "dotenv": "^9.0.0",
