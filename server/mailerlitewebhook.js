@@ -41,7 +41,7 @@ module.exports = () => {
   router.post("/events", async (req, res) => {
     for (let event of req.body.events) {
       console.log(`Event ${event.type} for subscriber ${event.data.subscriber.email} received.`);
-      eventhandlers[event.type](event.data.subscriber)
+      // eventhandlers[event.type](event.data.subscriber)
     }
     res.status(200).json({ status: "OK" });
   });
