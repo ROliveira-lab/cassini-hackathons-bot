@@ -65,8 +65,8 @@ async function addwebsitesubscriberstoeventplatform() {
 }
 
 async function run() {
-  // await registerattendeestoactivities();
-  await addwebsitesubscriberstoeventplatform();
+  await registerattendeestoactivities();
+  // await addwebsitesubscriberstoeventplatform();
 }
   
 module.exports = run();
