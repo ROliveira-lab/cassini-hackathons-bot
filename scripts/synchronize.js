@@ -60,8 +60,8 @@ async function addwebsitesubscriberstoeventplatform() {
 }
 
 async function run() {
-  await addwebsitesubscriberstoeventplatform();
-  await registerattendeestoactivities();
+  let newattendees = await addwebsitesubscriberstoeventplatform();
+  await registerattendeestoactivities(newattendees);
 }
   
 module.exports = run();
