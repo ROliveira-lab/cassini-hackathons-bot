@@ -32,6 +32,10 @@ class Subscriber {
     return this.subscriber.fields.find((field) => field.key === "hackathon_location")?.value;
   }
 
+  get status() {
+    return this.subscriber.type;
+  }
+
   get isactive() {
     return this.subscriber.type === "active";
   }
@@ -44,6 +48,16 @@ class Subscriber {
     return this.consent ? this.consent.includes("my participation in the hackathon") : false;
   }
 
+  export() {
+    return {
+      firstname: this.firstname,
+      lastname: this.lastname,
+      email: this.email,
+      location: this.location,
+      status: this.status,
+      consent: this.consent
+    }
+  }
 }
 
 module.exports = { Subscriber }

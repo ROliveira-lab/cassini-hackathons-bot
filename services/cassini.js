@@ -17,9 +17,27 @@ function gethackathonlocation(name) {
   return matchresult ? matchresult[1] : null;
 }
 
+let locations = [
+  "Portugal",
+  "Greece",
+  "France",
+  "Netherlands",
+  "Slovenia",
+  "Ireland",
+  "Czech Republic",
+  "Switzerland",
+  "Cyprus",
+  "Estonia"
+];
+
+function getlocations() {
+  return locations;
+}
+
 module.exports = {
   getname,
   getshortname,
   gethackathonname,
-  gethackathonlocation
+  gethackathonlocation,
+  getlocations
 }

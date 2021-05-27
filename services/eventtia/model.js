@@ -83,6 +83,14 @@ class Attendee {
     return this.attendeetype?.location;
   }
 
+  export() {
+    return {
+      firstname: this.firstname,
+      lastname: this.lastname,
+      email: this.email,
+      location: this.location
+    }
+  }
 }
 
 class Activity {

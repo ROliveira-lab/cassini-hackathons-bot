@@ -42,8 +42,22 @@ class Participant {
     return this.participant.answers.CustomAnswers.find((answer) => answer.key === "hackathon-location")?.value;
   }
 
+  get status() {
+    return this.participant.status.toLowerCase();
+  }
+
   get iscomplete() {
     return this.participant.status != "incomplete";
+  }
+
+  export() {
+    return {
+      firstname: this.firstname,
+      lastname: this.lastname,
+      email: this.email,
+      location: this.location,
+      status: this.status
+    }
   }
 }
 
