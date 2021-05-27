@@ -57,13 +57,14 @@ async function addwebsitesubscriberstoeventplatform() {
 
   }
 
-  registerattendeestoactivities(newattendees);
+  return newattendees;
 
 }
 
 async function run() {
   await registerattendeestoactivities();
-  // await addwebsitesubscriberstoeventplatform();
+  let newattendees = await addwebsitesubscriberstoeventplatform();
+  await registerattendeestoactivities(newattendees);
 }
   
 module.exports = run();
