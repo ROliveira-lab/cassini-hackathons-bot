@@ -43,14 +43,12 @@ async function addwebsitesubscriberstoeventplatform() {
 
   for (let subscriber of subscribers) {
     
-    console.log(`Subscriber ${subscriber.email} found on the website.`);
-
     if (subscriber.isactive && subscriber.isconsented) {
 
       if (!currentattendees.find((attendee) => attendee.email === subscriber.email)) {
-        console.log(`Create registration for ${subscriber.email} on the event platform.`);
+        console.log(`Register ${subscriber.email} on the event platform.`);
         let attendee = await eventtia.registerattendee(subscriber);
-        newattendees.push(attendee);
+        if (attendee) { newattendees.push(attendee); }
       }
 
     }
@@ -62,9 +60,8 @@ async function addwebsitesubscriberstoeventplatform() {
 }
 
 async function run() {
+  await addwebsitesubscriberstoeventplatform();
   await registerattendeestoactivities();
-  let newattendees = await addwebsitesubscriberstoeventplatform();
-  await registerattendeestoactivities(newattendees);
 }
   
 module.exports = run();
