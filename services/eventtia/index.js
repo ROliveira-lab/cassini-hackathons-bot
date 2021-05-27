@@ -78,6 +78,10 @@ async function getattendeetypebylocation(location, slug = defaultevent) {
   return attendeetypes.find((attendeetype) => attendeetype.location === location);
 }
 
+async function getdefaultattendeetype(slug = defaultevent) {
+  return await getattendeetypebylocation(cassini.defaulthackathonlocation(), slug);
+}
+
 // Attendee
 
 async function getattendees(slug = defaultevent) {
@@ -137,7 +141,7 @@ async function getactivitiesforlocation(location, slug = defaultevent) {
 
 async function registerattendee(properties, activities = [], slug = defaultevent) {
   await authentication;
-  let attendeetype = await getattendeetypebylocation(properties.location);
+  let attendeetype = await getattendeetypebylocation(properties.location) ?? await getdefaultattendeetype();
   let event = await getevent(slug);
   let api_key = event.apikey;
   let event_id = event.id;

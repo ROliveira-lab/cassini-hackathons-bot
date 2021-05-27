@@ -17,6 +17,10 @@ function gethackathonlocation(name) {
   return matchresult ? matchresult[1] : null;
 }
 
+function defaulthackathonlocation() {
+  return "Central Hub";
+}
+
 let locations = [
   "Portugal",
   "Greece",
@@ -40,5 +44,6 @@ module.exports = {
   getshortname,
   gethackathonname,
   gethackathonlocation,
+  defaulthackathonlocation,
   getlocations
 }
