@@ -21,7 +21,7 @@ async function run() {
   for (let location of cassini.getlocations()) {
     let localrecords = filterlocal(records, location);
     if (localrecords.length > 0) {
-      writeascsv(localrecords, `registrations_${location.toLowerCase()}.csv`);
+      writeascsv(localrecords, `registrations_${location.replace(' ', '_').toLowerCase()}.csv`);
     }
   }
 }

@@ -27,7 +27,8 @@ let locations = [
   "Czech Republic",
   "Switzerland",
   "Cyprus",
-  "Estonia"
+  "Estonia",
+  "Central Hub"
 ];
 
 function getlocations() {
