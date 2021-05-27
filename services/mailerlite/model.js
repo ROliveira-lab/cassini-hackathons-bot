@@ -28,6 +28,10 @@ class Subscriber {
     return this.subscriber.email;
   }
 
+  get country() {
+    return getcountry(this.subscriber.country_id);
+  }
+
   get location() {
     return this.subscriber.fields.find((field) => field.key === "hackathon_location")?.value;
   }
@@ -53,11 +57,20 @@ class Subscriber {
       firstname: this.firstname,
       lastname: this.lastname,
       email: this.email,
+      country: this.country,
       location: this.location,
       status: this.status,
       consent: this.consent
     }
   }
+}
+
+function getcountries() {
+  return require("./countries.json");
+}
+
+function getcountry(id) {
+  return getcountries().find(country => parseInt(country.id) === id)?.name;
 }
 
 module.exports = { Subscriber }
