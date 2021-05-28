@@ -1,6 +1,6 @@
 const { capitalCase, paramCase } = require("change-case");
 
-const model = require("./model");
+const invitemanager = require("./invitemanager");
 const cassini = require("../services/cassini");
 
 module.exports = (client) => {
@@ -34,8 +34,8 @@ module.exports = (client) => {
   client.on("guildMemberAdd", async (member) => {
     console.log(`[${member.guild}]: Guild member added: ${member}`);
 
-    let oldinvites = model.getinvitesforguild(member.guild);
-    let newinvites = await model.loadinvitesforguild(member.guild);
+    let oldinvites = invitemanager.getinvitesforguild(member.guild);
+    let newinvites = await invitemanager.loadinvitesforguild(member.guild);
 
     let invite = findusedinvite(oldinvites, newinvites);
 

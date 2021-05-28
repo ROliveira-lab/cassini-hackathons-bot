@@ -1,7 +1,7 @@
-const model = require("../model");
+const invitemanager = require("../invitemanager");
 
 function invites(interaction) {
-  let invites = model.getinvitesforguild({ id: interaction.guild_id });
+  let invites = invitemanager.getinvitesforguild({ id: interaction.guild_id });
   let groups = groupinvitesbycategory(invites);
   let description = groups.map(group => [formatcategory(group.category), ...group.invites.map(formatinvite), ""]).flat().join('\n');
   let title = "All invites"

@@ -4,8 +4,6 @@ module.exports = () => {
 
   const client = new Client();
 
-  const model = require("./model");
-
   require("./trackinvites")(client);
   require("./inviterole")(client);
   require("./commands")(client);
