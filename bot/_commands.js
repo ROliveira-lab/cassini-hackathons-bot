@@ -1,5 +1,3 @@
-const { Collection } = require("discord.js");
-
 module.exports = (model) => {
 
   var ping = (message, command, args) => {
@@ -51,5 +49,24 @@ module.exports = (model) => {
     message.channel.send(groups.map(group => [formatcategory(group.category), ...group.invites.map(formatinvite), ""]).flat());
   }
 
-  return { ping, sum, where, self, invites }
+  const commands = { ping, sum, where, self, invites };
+
+  client.on("message", (message) => {
+    if (message.author.bot) return;
+    if (!message.member.hasPermission("ADMINISTRATOR")) return;
+    if (!message.content.startsWith(prefix)) return;
+
+    const body = message.content.slice(prefix.length);
+    const args = body.split(' ');
+    const command = args.shift().toLowerCase();
+
+    console.log(`[${message.guild}]: Command: ${command}`);
+
+    if (command in commands) {
+      commands[command](message, command, args);
+    }
+  });
+
+  return commands;
+
 }
