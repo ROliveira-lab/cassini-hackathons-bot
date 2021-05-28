@@ -4,6 +4,6 @@ function self(interaction) {
 
 module.exports = {
   name: "self",
-  description: "Shows where you about yourself",
+  description: "Shows where you about yourself.",
   run: self
 };

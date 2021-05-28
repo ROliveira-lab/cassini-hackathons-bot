@@ -5,12 +5,12 @@ function echo(interaction) {
 
 module.exports = {
   name: "echo",
-  description: "Replies with your input",
+  description: "Responds with your input.",
   options: [
     {
       name: "input",
       type: 3,
-      description: "The input which should be echoed back",
+      description: "The input which should be echoed back.",
       required: true,
     }
   ],

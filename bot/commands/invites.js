@@ -36,6 +36,6 @@ function formatinvite(invite) {
 
 module.exports = {
   name: "invites",
-  description: "List all invites",
+  description: "List all invites.",
   run: invites
 };

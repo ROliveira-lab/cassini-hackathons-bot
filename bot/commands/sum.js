@@ -6,7 +6,7 @@ function sum(interaction) {
 
 module.exports = {
   name: "sum",
-  description: "Replies with the sum of two numbers",
+  description: "Replies with the sum of two numbers.",
   options: [
     {
       name: "a",

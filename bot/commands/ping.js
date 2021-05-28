@@ -4,6 +4,6 @@ function ping(interaction) {
 
 module.exports = {
   name: "ping",
-  description: "Replies with pong",
+  description: "Replies with pong.",
   run: ping
 };
