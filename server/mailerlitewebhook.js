@@ -2,8 +2,6 @@ const { Router } = require("express");
 
 const eventtia = require("../services/eventtia");
 
-const { Subscriber } = require("../services/mailerlite/model");
-
 module.exports = () => {
 
   const router = Router();
