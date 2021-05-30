@@ -69,7 +69,7 @@ module.exports = (client) => {
               description: "The hackathon location of interest",
               type: 3,
               required: false,
-              choices: cassini.getlocations().map((location) => ({ name: location, value: location }))
+              choices: cassini.getlocations().map((location) => ({ name: cassini.gethackathonname(location), value: location }))
           }
         ],
         run: registrationsstatus
