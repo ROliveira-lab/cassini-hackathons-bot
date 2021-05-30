@@ -5,7 +5,7 @@ const registrationsservice = require("../../services/registrations");
 
 module.exports = (client) => {
 
-  async function listregistrations(interaction) {
+  async function registrationsstatus(interaction) {
 
     let guild = await client.guilds.fetch(interaction.guild_id);
     let roles = await Promise.all(interaction.member.roles.map(id => guild.roles.fetch(id)));
@@ -40,23 +40,23 @@ module.exports = (client) => {
     description: "See registrations for the hackathon.",
     options: [
       {
-        name: "list",
-        description: "List all registrations.",
+        name: "status",
+        description: "Get registrations status update.",
         type: 1,
-        run: listregistrations
+        run: registrationsstatus
       },
-      {
-        name: "check",
-        description: "Check registrations for an email address.",
-        type: 1,
-        run: () => undefined
-      },
-      {
-        name: "analyse",
-        description: "Analyse registrations issues.",
-        type: 1,
-        run: () => undefined
-      }
+      // {
+      //   name: "check",
+      //   description: "Check registrations for an email address.",
+      //   type: 1,
+      //   run: () => undefined
+      // },
+      // {
+      //   name: "analyse",
+      //   description: "Analyse registrations issues.",
+      //   type: 1,
+      //   run: () => undefined
+      // }
     ],
     default_permission: false,
     allowedroles: [
