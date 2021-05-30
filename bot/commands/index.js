@@ -63,8 +63,11 @@ module.exports = (client) => {
         command = command.options.find(option => option.type === 1 && option.name === interaction.data.name);
       }
 
+      await client.api.interactions(interaction.id, interaction.token).callback.post({ data: { type: 5, data: { flags: 1 << 6 } } }).catch(console.error);
+
       let data = await command.run(interaction);
-      client.api.interactions(interaction.id, interaction.token).callback.post({ data }).catch(console.error);
+
+      await client.api.webhooks(interaction.application_id, interaction.token).messages("@original").patch({ data: data.data }).catch(console.error);
     }
   });
 
