@@ -7,45 +7,19 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const cassini = require("../services/cassini");
-const registrations = require("../services/registrations");
+const { RegistrationsManager } = require("../services/registrations");
 
 async function run() {
-  let subscribers = await registrations.website.getregistrations()
-  let participants = await registrations.hackathonplatform.getregistrations();
-  let attendees = await registrations.eventplatform.getregistrations();
+  let registrationsmanager = new RegistrationsManager();
+  await registrationsmanager.loadalldata();
 
-  let records = matchonemail(subscribers, participants, attendees);
-
-  writeascsv(records, `registrations.csv`);
+  let registrations = registrationsmanager.getallregistrations();
+  writeascsv(registrations, `registrations.csv`);
 
   for (let location of cassini.getlocations()) {
-    let localrecords = filterlocal(records, location);
-    if (localrecords.length > 0) {
-      writeascsv(localrecords, `registrations_${location.replace(' ', '_').toLowerCase()}.csv`);
-    }
+    let localregistrations = registrationsmanager.getallregistrations(location);
+    writeascsv(localregistrations, `registrations_${location.replace(' ', '_').toLowerCase()}.csv`);
   }
-}
-
-function matchonemail(subscribers, participants, attendees) {
-  let result = {}
-  addtoresult("website", subscribers, result);
-  addtoresult("junction", participants, result);
-  addtoresult("eventtia", attendees, result);
-  return Object.values(result);
-}
-
-function addtoresult(key, registrations, result) {
-  for (let registration of registrations) {
-    if (!(registration.email in result)) {
-      result[registration.email] = {};
-    }
-    result[registration.email][key] = registration.export();
-  }
-  return result;
-}
-
-function filterlocal(records, location) {
-  return records.filter(record => record.website?.location === location || record.junction?.location === location || record.eventtia?.location === location);
 }
 
 function writeascsv(records, filename) {
@@ -69,6 +43,7 @@ function writeascsv(records, filename) {
     "eventtia.email",
     "eventtia.location"
   ];
+  records = records.map(record => record.export());
   let csv = json2csv.parse(records, { delimiter: ";", fields, transforms: [ json2csv.transforms.flatten() ] });
   let filepath = path.join(__dirname, "../data", filename);
   write.sync(filepath, csv);
