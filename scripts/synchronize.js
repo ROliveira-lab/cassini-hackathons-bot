@@ -5,6 +5,8 @@ dotenv.config();
 const mailerlite = require("../services/mailerlite");
 const eventtia = require("../services/eventtia");
 
+let sleep = (seconds) => new Promise(resolve => setTimeout(resolve, seconds * 1000));
+
 async function registerattendeestoactivities(attendees, activities) {
   
   attendees = attendees ?? await eventtia.getattendees();
@@ -48,7 +50,8 @@ async function addwebsitesubscriberstoeventplatform() {
       if (!currentattendees.find((attendee) => attendee.email === subscriber.email)) {
         console.log(`Register ${subscriber.email} on the event platform.`);
         let attendee = await eventtia.registerattendee(subscriber);
-        if (attendee) { newattendees.push(attendee); }
+        if (attendee) { newattendees.push(attendee); }    
+        await sleep(5);
       }
 
     }
