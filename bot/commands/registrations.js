@@ -13,12 +13,9 @@ module.exports = (client) => {
 
     var location = interaction.data.options?.find(option => option.name === "location")?.value;
 
-    let registrationsmanager = new RegistrationsManager();
-    await Promise.all([registrationsmanager.loadsubscribers(), registrationsmanager.loadattendees()]);
-
     if (cassini.iscoreteammember(rolenames)) {
 
-      var registrations = registrationsmanager.getallregistrations(location);
+      // Nothing to check here
 
     } else if (cassini.islocalorganiser(rolenames)) {
 
@@ -33,9 +30,13 @@ module.exports = (client) => {
       }
 
       location = location ?? crewmemberlocation;
-
-      var registrations = registrationsmanager.getallregistrations(location);
     }
+
+    let registrationsmanager = new RegistrationsManager();
+
+    await Promise.all([registrationsmanager.loadsubscribers(), registrationsmanager.loadattendees()]);
+
+    var registrations = registrationsmanager.getallregistrations(location);
 
     let websiteregistrations = registrations.filter((registration) => registration.subscriber && registration.subscriber.isactive && registration.subscriber.isconsented);
 
