@@ -12,7 +12,8 @@
   "scripts": {
     "start": "node ./index.js",
     "deploy": "node ./scripts/createwebhooks.js",
-    "sync": "node ./scripts/synchronize.js"
+    "sync": "node ./scripts/synchronizeregistrations.js",
+    "export": "node ./scripts/exportregistrations.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
