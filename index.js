@@ -4,4 +4,4 @@ dotenv.config();
 
 const bot = require("./bot")();
 
-// const server = require("./server")();
+const server = require("./server")();

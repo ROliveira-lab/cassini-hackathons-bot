@@ -12,7 +12,7 @@ async function createmailerlitewebhooks(reset = false) {
     "subscriber.unsubscribe"
   ]
     
-  let endpointurl = `https://${process.env.WEBSITE_HOSTNAME}/webhooks/mailerlite/events`;
+  let endpointurl = `https://${process.env.WEBSITE_HOSTNAME}/webhooks/mailerlite/`;
 
   if (reset) {
 
@@ -25,7 +25,7 @@ async function createmailerlitewebhooks(reset = false) {
   }
 
   for (let event of events) {
-    await mailerlite.createwebhook(event, endpointurl).then((webhook) => { console.log(`Webhook ${webhook.url} created for event ${webhook.event}`); });
+    await mailerlite.createwebhook(event, endpointurl + event).then((webhook) => { console.log(`Webhook ${webhook.url} created for event ${webhook.event}`); });
   }
 
 }

@@ -12,7 +12,7 @@ module.exports = () => {
 
   app.use(express.json());
 
-  app.use("/webhooks/mailerlite/", require("./mailerlitewebhook")());
+  app.use("/webhooks/mailerlite/", require("./mailerlitewebhooks")());
 
   app.get("/", (req, res) => {
     res.json({ status: "OK" });
