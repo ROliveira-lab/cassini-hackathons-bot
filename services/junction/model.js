@@ -26,6 +26,14 @@ class Participant {
     return undefined;
   }
 
+  get created() {
+    return this.participant.createdAt;
+  }
+
+  get updated() {
+    return this.participant.updatedAt;
+  }
+
   get firstname() {
     return this.participant.answers.firstName;
   }
@@ -36,6 +44,14 @@ class Participant {
 
   get email() {
     return this.participant.answers.email;
+  }
+
+  get countryofresidence() {
+    return this.participant.answers.countryOfResidence;
+  }
+
+  get birthdate() {
+    return this.participant.answers.dateOfBirth;
   }
 
   get location() {
@@ -55,6 +71,8 @@ class Participant {
       firstname: this.firstname,
       lastname: this.lastname,
       email: this.email,
+      countryofresidence: this.countryofresidence,
+      birthdate: this.birthdate,
       location: this.location,
       status: this.status
     }

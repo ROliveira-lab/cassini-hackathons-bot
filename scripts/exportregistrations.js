@@ -49,7 +49,26 @@ function filterlocal(records, location) {
 }
 
 function writeascsv(records, filename) {
-  let fields = ["website.firstname", "website.lastname", "website.email", "website.country", "website.location", "website.status", "website.consent", "junction.firstname", "junction.lastname", "junction.email", "junction.location", "junction.status", "eventtia.firstname", "eventtia.lastname", "eventtia.email", "eventtia.location"];
+  let fields = [
+    "website.firstname",
+    "website.lastname",
+    "website.email",
+    "website.countryofip",
+    "website.location",
+    "website.status",
+    "website.consent",
+    "junction.firstname",
+    "junction.lastname",
+    "junction.email",
+    "junction.countryofresidence",
+    "junction.birthdate",
+    "junction.location",
+    "junction.status",
+    "eventtia.firstname",
+    "eventtia.lastname",
+    "eventtia.email",
+    "eventtia.location"
+  ];
   let csv = json2csv.parse(records, { delimiter: ";", fields, transforms: [ json2csv.transforms.flatten() ] });
   let filepath = path.join(__dirname, "../data", filename);
   write.sync(filepath, csv);
