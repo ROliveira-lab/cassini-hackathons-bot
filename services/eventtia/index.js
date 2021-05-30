@@ -179,6 +179,20 @@ async function updateactivitiesofattendee(attendee, activities, slug = defaultev
   return response?.data.data;
 }
 
+// Webhooks
+
+async function createwebhook(event, url, slug = defaultevent) {
+  await authentication;
+  let response = await eventtiaapi.post(`/events/${slug}/event_web_hooks`, { trigger: event, target_url: url })//.catch((error) => console.error(error.message));
+  return response?.data;
+}
+
+async function deletewebhook(url, slug = defaultevent) {
+  await authentication;
+  let response = await eventtiaapi.delete(`/events/${slug}/event_web_hooks`, { data: { target_url: url } })//.catch((error) => console.error(error.message));
+  return response?.data;
+}
+
 module.exports = {
   getevent,
   getattendeetypes,
@@ -196,5 +210,7 @@ module.exports = {
   registerattendee,
   registerattendeeforactivity,
   unregisterattendeeforactivity,
-  updateactivitiesofattendee
+  updateactivitiesofattendee,
+  createwebhook,
+  deletewebhook
 }

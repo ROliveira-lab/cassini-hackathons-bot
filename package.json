@@ -12,6 +12,7 @@
   "scripts": {
     "start": "node ./index.js",
     "deploy": "node ./scripts/createwebhooks.js",
+    "undeploy": "node ./scripts/deletewebhooks.js",
     "sync": "node ./scripts/synchronize.js"
   },
   "dependencies": {
