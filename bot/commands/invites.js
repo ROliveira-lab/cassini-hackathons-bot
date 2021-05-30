@@ -1,4 +1,5 @@
 const invitemanager = require("../invitemanager");
+const cassini = require("../../services/cassini");
 
 function invites(interaction) {
   let invites = invitemanager.getinvitesforguild({ id: interaction.guild_id });
@@ -37,5 +38,9 @@ function formatinvite(invite) {
 module.exports = {
   name: "invites",
   description: "List all invites.",
-  run: invites
+  run: invites,
+  default_permission: false,
+  allowedroles: [
+    cassini.coreteammemberlabel()
+  ]
 };

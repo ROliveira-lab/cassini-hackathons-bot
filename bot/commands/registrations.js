@@ -27,7 +27,7 @@ module.exports = (client) => {
     let lastweeksregistrations = registrations.filter((r) => new Date(r.created) > lastweek);
 
     const embed = new MessageEmbed();
-    embed.setTitle(location ? `Registrations for ${cassini.gethackathonname(location)}` : `All registrations`);
+    embed.setTitle(location ? `Website registrations for ${cassini.gethackathonname(location)}` : `All website registrations`);
     embed.addField("Total", `${registrations.length} registrations`, true);
     embed.addField("Last week", `${lastweeksregistrations.length} registrations`, true);
     embed.setTimestamp();
@@ -57,6 +57,11 @@ module.exports = (client) => {
         type: 1,
         run: () => undefined
       }
+    ],
+    default_permission: false,
+    allowedroles: [
+      cassini.coreteammemberlabel(),
+      cassini.localorganiserlabel()
     ]
   };
 

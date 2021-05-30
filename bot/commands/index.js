@@ -12,9 +12,29 @@ module.exports = (client) => {
   commands.set("invites", require("./invites"));
   commands.set("registrations", require("./registrations")(client));
 
-  function registercommands(guild, commands) {
-    client.api.applications(client.user.id).guilds(guild.id).commands.put({ data: commands }).catch(console.error)
-      .then((commands) => { console.log(`${client.user.username} has registered ${commands.length} commands for server ${guild.name}`); });
+  async function registercommands(guild, commandprototypes) {
+    await client.api.applications(client.user.id).guilds(guild.id).commands.put({ data: [] }).catch(console.error);
+    let commands = await Promise.all(commandprototypes.map((commandprototype) => registercommand(guild, commandprototype)));
+  }
+
+  async function registercommand(guild, commandprototype) {
+    let command = await client.api.applications(client.user.id).guilds(guild.id).commands.post({ data: commandprototype }).catch(console.error);
+
+    if (commandprototype.allowedroles) {
+      
+      let roles = await guild.roles.fetch().catch(console.error);
+
+      let permissions = commandprototype.allowedroles.map((rolename) => {
+        let role = roles.cache.find(role => role.name === rolename);
+        return role ? { id: role.id, type: 1, permission: true } : undefined;
+      })
+
+      await client.api.applications(client.user.id).guilds(guild.id).commands(command.id).permissions.put({ data: { permissions } }).catch(console.error);
+    }
+
+    console.log(`${client.user.username} has registered command ${command.name} for server ${guild.name}`);
+
+    return command;
   }
 
   client.once("ready", () => {
@@ -46,7 +66,7 @@ module.exports = (client) => {
       let data = await command.run(interaction);
       client.api.interactions(interaction.id, interaction.token).callback.post({ data }).catch(console.error);
     }
-});
+  });
 
   return commands;
 
