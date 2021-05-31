@@ -28,7 +28,7 @@ class Subscriber {
     return this.subscriber.email;
   }
 
-  get country() {
+  get countryofip() {
     return getcountry(this.subscriber.country_id);
   }
 
@@ -57,7 +57,7 @@ class Subscriber {
       firstname: this.firstname,
       lastname: this.lastname,
       email: this.email,
-      country: this.country,
+      countryofip: this.countryofip,
       location: this.location,
       status: this.status,
       consent: this.consent

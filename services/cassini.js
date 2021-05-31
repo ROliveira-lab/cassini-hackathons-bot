@@ -39,6 +39,26 @@ function getlocations() {
   return alllocations;
 }
 
+function coreteammemberlabel() {
+  return "Core Team Member";
+}
+
+function localorganiserlabel() {
+  return "Local Organiser";
+}
+
+function crewmemberlabel() {
+  return "Crew Member";
+}
+
+function hackerlabel() {
+  return "Hacker";
+}
+
+function visitorlabel() {
+  return "Visitor";
+}
+
 function iscoreteammember(rolenames) {
   return rolenames.includes("Core Team Member");
 }
@@ -78,6 +98,11 @@ module.exports = {
   gethackathonlocation,
   defaulthackathonlocation,
   getlocations,
+  coreteammemberlabel,
+  localorganiserlabel,
+  crewmemberlabel,
+  hackerlabel,
+  visitorlabel,
   iscoreteammember,
   islocalorganiser,
   iscrewmember,

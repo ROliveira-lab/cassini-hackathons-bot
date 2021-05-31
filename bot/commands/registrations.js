@@ -1,35 +1,56 @@
 const { MessageEmbed, MessageAttachment } = require("discord.js");
 
 const cassini = require("../../services/cassini");
-const registrationsservice = require("../../services/registrations");
+const { RegistrationsManager } = require("../../services/registrations");
 
 module.exports = (client) => {
 
-  async function listregistrations(interaction) {
+  async function registrationsstatus(interaction) {
 
     let guild = await client.guilds.fetch(interaction.guild_id);
     let roles = await Promise.all(interaction.member.roles.map(id => guild.roles.fetch(id)));
     let rolenames = roles.map(role => role.name);
 
+    var location = interaction.data.options?.find(option => option.name === "location")?.value;
+
     if (cassini.iscoreteammember(rolenames)) {
 
-      var registrations = await registrationsservice.website.getregistrations();
+      // Nothing to check here
 
-    } else if (cassini.islocalorganiser(rolenames) && cassini.iscrewmember(rolenames)) {
+    } else if (cassini.islocalorganiser(rolenames)) {
 
-      var location = cassini.getcrewmemberlocation(rolenames);
-      var registrations = await registrationsservice.website.getregistrations(location);
+      crewmemberlocation = cassini.getcrewmemberlocation(rolenames);
 
+      if (!crewmemberlocation) {
+        return { type: 4, data: { content: "You need a local crewmember role to see registrations for a hackathon location.", flags: 1 << 6 } };
+      }
+
+      if (location && location != crewmemberlocation) {
+        return { type: 4, data: { content: "You do not have permission to see registrations for this hackathon location.", flags: 1 << 6 } };
+      }
+
+      location = location ?? crewmemberlocation;
     }
+
+    let registrationsmanager = new RegistrationsManager();
+
+    await Promise.all([registrationsmanager.loadsubscribers(), registrationsmanager.loadattendees()]);
+
+    var registrations = registrationsmanager.getallregistrations(location);
+
+    let websiteregistrations = registrations.filter((registration) => registration.subscriber && registration.subscriber.isactive && registration.subscriber.isconsented);
 
     let today = new Date();
     let lastweek = today.setDate(today.getDate() - 7);
-    let lastweeksregistrations = registrations.filter((r) => new Date(r.created) > lastweek);
+    let lastweekswebsiteregistrations = websiteregistrations.filter((r) => new Date(r.subscriber.created) > lastweek);
+
+    let additionaleventtiaregistrations = registrations.filter((registration) => !registration.subscriber && registration.attendee);
 
     const embed = new MessageEmbed();
-    embed.setTitle(location ? `Registrations for ${cassini.gethackathonname(location)}` : `All registrations`);
-    embed.addField("Total", `${registrations.length} registrations`, true);
-    embed.addField("Last week", `${lastweeksregistrations.length} registrations`, true);
+    embed.setTitle(location ? `Website registrations for ${cassini.gethackathonname(location)}` : `All website registrations`);
+    embed.addField("Total website registrations", `${websiteregistrations.length} registrations`, true);
+    embed.addField("Last week's website registrations", `${lastweekswebsiteregistrations.length} registrations`, true);
+    embed.addField("Additional event platform registrations", `${additionaleventtiaregistrations.length} registrations`);
     embed.setTimestamp();
 
     return { type: 4, data: { embeds: [ embed ], flags: 1 << 6 } };
@@ -40,23 +61,37 @@ module.exports = (client) => {
     description: "See registrations for the hackathon.",
     options: [
       {
-        name: "list",
-        description: "List all registrations.",
+        name: "status",
+        description: "Get registrations status update.",
         type: 1,
-        run: listregistrations
+        options: [
+          {
+              name: "location",
+              description: "The hackathon location of interest",
+              type: 3,
+              required: false,
+              choices: cassini.getlocations().map((location) => ({ name: cassini.gethackathonname(location), value: location }))
+          }
+        ],
+        run: registrationsstatus
       },
-      {
-        name: "check",
-        description: "Check registrations for an email address.",
-        type: 1,
-        run: () => undefined
-      },
-      {
-        name: "analyse",
-        description: "Analyse registrations issues.",
-        type: 1,
-        run: () => undefined
-      }
+      // {
+      //   name: "check",
+      //   description: "Check registrations for an email address.",
+      //   type: 1,
+      //   run: () => undefined
+      // },
+      // {
+      //   name: "analyse",
+      //   description: "Analyse registrations issues.",
+      //   type: 1,
+      //   run: () => undefined
+      // }
+    ],
+    default_permission: false,
+    allowedroles: [
+      cassini.coreteammemberlabel(),
+      cassini.localorganiserlabel()
     ]
   };
 
