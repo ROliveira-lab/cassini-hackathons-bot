@@ -23,10 +23,12 @@ module.exports = () => {
 
       let groupsofsubscriber = await mailerlite.getgroupsofsubscriber(attendee.email);
       
-      for (let group of groupsofsubscriber) {
-        await mailerlite.removesubscriberfromgroup(group.id, attendee.email);
+      if (groupsofsubscriber) {
+        for (let group of groupsofsubscriber) {
+          await mailerlite.removesubscriberfromgroup(group.id, attendee.email);
+        }
       }
-
+      
       subscriber = await mailerlite.addnewsubscribertogroup((await eventtiagroup).id, attendee);
     }
 
