@@ -37,7 +37,7 @@ async function createmailerlitewebhooks(reset = false) {
 }
 
 async function run() {
-  // await createmailerlitewebhooks();
+  await createmailerlitewebhooks();
   await createeventtiawebhooks();
 }
 
