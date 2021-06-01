@@ -62,9 +62,44 @@ async function addwebsitesubscriberstoeventplatform() {
 
 }
 
+async function addeventplatformattendeestowebsite() {
+
+  let eventtiagroup = await mailerlite.getgroupbyname("Eventtia registrations");
+  
+  let attendees = await eventtia.getattendees();
+  let currentsubscribers = await mailerlite.getsubscribers();
+  
+  let newsubscribers = [];
+
+  for (let attendee of attendees) {
+    
+    if (attendee.isactive) {
+
+      if (!currentsubscribers.find((subscriber) => subscriber.email === attendee.email)) {
+        console.log(`Register ${attendee.email} on the website.`);
+
+        let groupsofsubscriber = await mailerlite.getgroupsofsubscriber(attendee.email);
+        if (groupsofsubscriber) {
+          for (let group of groupsofsubscriber) {
+            await mailerlite.removesubscriberfromgroup(group.id, attendee.email);
+          }
+          await sleep(10);
+        }
+        subscriber = await mailerlite.addnewsubscribertogroup(eventtiagroup.id, attendee); 
+      }
+
+    }
+
+  }
+
+  return newsubscribers;
+
+}
+
 async function run() {
   let newattendees = await addwebsitesubscriberstoeventplatform();
   await registerattendeestoactivities(newattendees);
+  await addeventplatformattendeestowebsite()
 }
   
 module.exports = run();

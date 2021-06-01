@@ -96,9 +96,9 @@ async function getattendeebyid(attendeeid, slug = defaultevent) {
   await authentication;
   let data = await eventtiaapi.getdata(`/events/${slug}/attendees/${attendeeid}`);
   if (!data) { return undefined; }
-  let atttendee = new Attendee(data);
+  let attendee = new Attendee(data);
   attendee.attendeetype = await getattendeetypebyid(attendee.attendeetypeid);
-  return atttendee;
+  return attendee;
 }
 
 async function getattendeebyemail(attendeeemail, slug = defaultevent) {

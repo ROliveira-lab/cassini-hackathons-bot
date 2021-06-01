@@ -83,6 +83,10 @@ class Attendee {
     return this.attendeetype?.location;
   }
 
+  get isactive() {
+    return this.attendee.attributes.status === "confirmed";
+  }
+
   export() {
     return {
       firstname: this.firstname,
