@@ -13,6 +13,7 @@ module.exports = () => {
   app.use(express.json());
 
   app.use("/webhooks/mailerlite/", require("./mailerlitewebhooks")());
+  app.use("/webhooks/eventtia/", require("./eventtiawebhooks")());
 
   app.get("/", (req, res) => {
     res.json({ status: "OK" });
