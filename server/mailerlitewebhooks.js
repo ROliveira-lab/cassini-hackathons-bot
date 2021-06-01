@@ -22,20 +22,20 @@ module.exports = () => {
     for (let event of req.body.events) {
       logevent(event);
 
-      // let subscriber = new Subscriber(event.data.subscriber);
+      let subscriber = new Subscriber(event.data.subscriber);
       
-      // if (subscriber.isactive && subscriber.isconsented) {
+      if (subscriber.isactive && subscriber.isconsented) {
 
-      //   console.log(`Find registration for ${subscriber.email} on the event platform.`);
-      //   let attendee = await eventtia.getattendeebyemail(subscriber.email);
+        console.log(`Find registration for ${subscriber.email} on the event platform.`);
+        let attendee = await eventtia.getattendeebyemail(subscriber.email);
   
-      //   if (!attendee) {
-      //     console.log(`Create registration for ${subscriber.email} on the event platform and register for all activities.`);
-      //     let activities = await eventtia.getactivitiesforlocation(subscriber.location);
-      //     attendee = await eventtia.registerattendee(subscriber, activities);
-      //   }
+        if (!attendee) {
+          console.log(`Create registration for ${subscriber.email} on the event platform and register for all activities.`);
+          let activities = await eventtia.getactivitiesforlocation(subscriber.location);
+          attendee = await eventtia.registerattendee(subscriber, activities);
+        }
   
-      // }
+      }
 
     }
     res.status(200).json({ status: "OK" });
