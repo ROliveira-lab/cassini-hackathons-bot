@@ -67,7 +67,7 @@ async function addeventplatformattendeestowebsite() {
   let eventtiagroup = await mailerlite.getgroupbyname("Eventtia registrations");
   
   let attendees = await eventtia.getattendees();
-  let currentsubscribers = await mailerlite.getsubscribers();
+  let currentsubscribers = await mailerlite.getsubscribers(null);
   
   let newsubscribers = [];
 
