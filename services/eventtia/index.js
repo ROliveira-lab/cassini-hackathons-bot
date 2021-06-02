@@ -181,15 +181,15 @@ async function updateactivitiesofattendee(attendee, activities, slug = defaultev
 
 // Webhooks
 
-async function createwebhook(event, url, slug = defaultevent) {
+async function createwebhook(trigger, url, slug = defaultevent) {
   await authentication;
-  let response = await eventtiaapi.post(`/events/${slug}/event_web_hooks`, { trigger: event, target_url: url })//.catch((error) => console.error(error.message));
+  let response = await eventtiaapi.post(`/events/${slug}/event_web_hooks`, { trigger, target_url: url }).catch((error) => console.error(error.message));
   return response?.data;
 }
 
 async function deletewebhook(url, slug = defaultevent) {
   await authentication;
-  let response = await eventtiaapi.delete(`/events/${slug}/event_web_hooks`, { data: { target_url: url } })//.catch((error) => console.error(error.message));
+  let response = await eventtiaapi.delete(`/events/${slug}/event_web_hooks`, { data: { target_url: url } }).catch((error) => console.error(error.message));
   return response?.data;
 }
 

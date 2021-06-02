@@ -23,7 +23,7 @@ async function getgroupbyname(groupname) {
 }
 
 async function getgroupsofsubscriber(subscriberidoremail) {
-  let response = await mailerliteapi.get(`/subscribers/${subscriberidoremail}/groups`).catch((error) => console.error(error.message));
+  let response = await mailerliteapi.get(`/subscribers/${subscriberidoremail}/groups`).catch((error) => console.error(error.message, error.response.data));
   return response?.data;
 }
 
@@ -40,12 +40,12 @@ async function getsubscribersingroup(groupid, type = "active") {
 }
 
 async function getsubscriber(subscriberidoremail) {
-  let response = await mailerliteapi.get(`/subscribers/${subscriberidoremail}`).catch((error) => console.error(error.message));
+  let response = await mailerliteapi.get(`/subscribers/${subscriberidoremail}`).catch((error) => console.error(error.message, error.response.data));
   return response ? new Subscriber(response.data) : undefined;
 }
 
 async function getsubscriberingroup(groupid, subscriberid) {
-  let response = await mailerliteapi.get(`/groups/${groupid}/subscribers/${subscriberid}`).catch((error) => console.error(error.message));
+  let response = await mailerliteapi.get(`/groups/${groupid}/subscribers/${subscriberid}`).catch((error) => console.error(error.message, error.response.data));
   return response ? new Subscriber(response.data) : undefined;
 }
 
@@ -68,24 +68,24 @@ function subscriberprototype(registration) {
 
 async function updatesubscriber(subscriberidoremail, registration) {
   let subscriber = subscriberprototype(registration);
-  let response = await mailerliteapi.put(`/subscribers/${subscriberidoremail}`, subscriber).catch((error) => console.error(error.message));
+  let response = await mailerliteapi.put(`/subscribers/${subscriberidoremail}`, subscriber).catch((error) => console.error(error.message, error.response.data));
   return response ? new Subscriber(response.data) : undefined;
 }
 
 async function addnewsubscriber(registration) {
   let subscriber = subscriberprototype(registration);
-  let response = await mailerliteapi.post(`/subscribers`, subscriber);
+  let response = await mailerliteapi.post(`/subscribers`, subscriber).catch((error) => console.error(error.message, error.response.data));;
   return response ? new Subscriber(response.data) : undefined;
 }
 
 async function addnewsubscribertogroup(groupid, registration) {
   let subscriber = subscriberprototype(registration);
-  let response = await mailerliteapi.post(`/groups/${groupid}/subscribers`, subscriber);
+  let response = await mailerliteapi.post(`/groups/${groupid}/subscribers`, subscriber).catch((error) => console.error(error.message, error.response.data));;
   return response ? new Subscriber(response.data) : undefined;
 }
 
 async function removesubscriberfromgroup(groupid, subscriberidoremail) {
-  await mailerliteapi.delete(`/groups/${groupid}/subscribers/${subscriberidoremail}`).catch((error) => console.error(error.message));
+  await mailerliteapi.delete(`/groups/${groupid}/subscribers/${subscriberidoremail}`).catch((error) => console.error(error.message, error.response.data));
 }
 
 // Webhooks

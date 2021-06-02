@@ -6,8 +6,6 @@ const mailerlite = require("../services/mailerlite");
 
 module.exports = () => {
 
-  let eventtiagroup = mailerlite.getgroupbyname("Eventtia registrations");
-
   const router = Router();
   
   router.post("/attendee_created", async (req, res) => {
@@ -22,14 +20,17 @@ module.exports = () => {
       console.log(`Create registration for ${attendee.email} on the website.`);
 
       let groupsofsubscriber = await mailerlite.getgroupsofsubscriber(attendee.email);
+      let eventtiagroup = await mailerlite.getgroupbyname("Eventtia registrations");
       
       if (groupsofsubscriber) {
         for (let group of groupsofsubscriber) {
-          await mailerlite.removesubscriberfromgroup(group.id, attendee.email);
+          if (group.id != eventtiagroup.id) {
+            await mailerlite.removesubscriberfromgroup(group.id, attendee.email);
+          }
         }
       }
       
-      subscriber = await mailerlite.addnewsubscribertogroup((await eventtiagroup).id, attendee);
+      subscriber = await mailerlite.addnewsubscribertogroup(eventtiagroup.id, attendee);
     }
 
     res.status(200).json({ status: "OK" });
