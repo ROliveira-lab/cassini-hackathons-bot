@@ -74,14 +74,12 @@ async function updatesubscriber(subscriberidoremail, registration) {
 
 async function addnewsubscriber(registration) {
   let subscriber = subscriberprototype(registration);
-  subscriber.resubscribe = true;
   let response = await mailerliteapi.post(`/subscribers`, subscriber);
   return response ? new Subscriber(response.data) : undefined;
 }
 
 async function addnewsubscribertogroup(groupid, registration) {
   let subscriber = subscriberprototype(registration);
-  subscriber.resubscribe = true;
   let response = await mailerliteapi.post(`/groups/${groupid}/subscribers`, subscriber);
   return response ? new Subscriber(response.data) : undefined;
 }
