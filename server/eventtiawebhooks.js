@@ -13,7 +13,7 @@ module.exports = () => {
   router.post("/attendee_created", async (req, res) => {
     let attendee = new Attendee(req.body.data);
     attendee.attendeetype = new AttendeeType(req.body.included.find((o) => o.id === attendee.attendeetypeid));
-    console.log(`Eventtia: Event attendee_created for ${attendee.firstname} ${attendee.lastname} (${attendee.email}) received`);
+    console.log(`Eventtia: Event attendee_created for ${attendee.email} received`);
 
     console.log(`Find registration for ${attendee.email} on the website.`);
     let subscriber = await mailerlite.getsubscriber(attendee.email);
@@ -38,7 +38,7 @@ module.exports = () => {
   router.post("/attendee_updated", async (req, res) => {
     let attendee = new Attendee(req.body.data);
     attendee.attendeetype = req.body.included.find((o) => o.id === attendee.attendeetypeid);
-    console.log(`Eventtia: Event attendee_updated for ${attendee.firstname} ${attendee.lastname} (${attendee.email}) received`);
+    console.log(`Eventtia: Event attendee_updated for ${attendee.email} received`);
     res.status(200).json({ status: "OK" });
   });
 

@@ -8,7 +8,7 @@ module.exports = () => {
   const router = Router();
 
   function logevent(event) {
-    console.log(`MailerLite: Event ${event.type} for ${event.data.subscriber.firstname} ${event.data.subscriber.lastname} (${event.data.subscriber.email}) received`);
+    console.log(`MailerLite: Event ${event.type} for ${event.data.subscriber.email} received`);
   }
 
   router.post("/subscriber.create", async (req, res) => {
