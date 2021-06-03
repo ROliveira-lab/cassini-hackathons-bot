@@ -88,6 +88,7 @@ async function getattendees(slug = defaultevent) {
   await authentication;
   let data = await eventtiaapi.getdatawithpagination(`/events/${slug}/attendees`);
   let attendees = data.map(item => new Attendee(item));
+  let attendee_types = await getattendeetypes(slug);
   await Promise.all(attendees.map(async (attendee) => { attendee.attendeetype = await getattendeetypebyid(attendee.attendeetypeid); return attendee; }));
   return attendees;
 }
