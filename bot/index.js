@@ -8,7 +8,7 @@ module.exports = () => {
   require("./inviterole")(client);
   require("./commands")(client);
 
-  client.login(process.env.TOKEN);
+  client.login(process.env.DISCORD_TOKEN);
 
   return client;
 
