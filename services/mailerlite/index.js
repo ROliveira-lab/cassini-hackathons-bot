@@ -35,7 +35,7 @@ async function getsubscribers(type = "active") {
 }
 
 async function getsubscribersingroup(groupid, type = "active") {
-  let response = await mailerliteapi.get(`/groups/${groupid}/subscribers`, { params: { offset: 0, limit: 5000, type } });
+  let response = await mailerliteapi.get(`/groups/${groupid}/subscribers${type ? '/' + type : ''}`, { params: { offset: 0, limit: 5000 } });
   return response ? response.data.map(item => new Subscriber(item)) : undefined;
 }
 

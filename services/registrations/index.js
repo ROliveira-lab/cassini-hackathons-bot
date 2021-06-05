@@ -89,8 +89,13 @@ class Registration {
     return this.subscriber?.location === location || this.participant?.location === location || this.attendee?.location === location;
   }
 
+  get canbecontacted() {
+    return this.subscriber ? this.subscriber.isactive && this.subscriber.isconsented : false;
+  }
+
   export() {
     return {
+      canbecontacted: this.canbecontacted,
       website: this.subscriber?.export(),
       junction: this.participant?.export(),
       eventtia: this.attendee?.export()

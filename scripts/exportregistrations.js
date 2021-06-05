@@ -24,6 +24,7 @@ async function run() {
 
 function writeascsv(records, filename) {
   let fields = [
+    "canbecontacted",
     "website.firstname",
     "website.lastname",
     "website.email",

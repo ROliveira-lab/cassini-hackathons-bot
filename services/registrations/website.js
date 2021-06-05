@@ -5,7 +5,8 @@ const mailerlite = require("../mailerlite");
 
 async function getregistrations(location = undefined) {
   let group = await mailerlite.getgroupbyname(cassini.getshortname());
-  let subscribers = await mailerlite.getsubscribersingroup(group.id);
+  let subscribers = await mailerlite.getsubscribersingroup(group.id, null);
+  subscribers = subscribers.filter((subscriber) => subscriber.status != "unsubscribed");
   return location === undefined ? subscribers : subscribers.filter(r => r.location === location);
 }
 
