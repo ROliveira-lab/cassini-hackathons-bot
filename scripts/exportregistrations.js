@@ -14,7 +14,8 @@ async function run() {
   registrationsmanager.exportascsv(path.join(__dirname, "../data", "registrations.csv"));
 
   for (let location of cassini.getlocations()) {
-    registrationsmanager.exportascsv(path.join(__dirname, "../data", `registrations_${location.replace(' ', '_').toLowerCase()}.csv`), location);
+    let filename = `registrations_${location.replace(' ', '_').toLowerCase()}.csv`
+    registrationsmanager.exportascsv(path.join(__dirname, "../data", filename), location);
   }
 }
 

@@ -34,7 +34,7 @@ module.exports = (client) => {
 
     let registrationsmanager = new RegistrationsManager();
 
-    await Promise.all([registrationsmanager.loadsubscribers(), registrationsmanager.loadattendees()]);
+    await registrationsmanager.loadalldata();
 
     var registrations = registrationsmanager.getallregistrations(location);
 
