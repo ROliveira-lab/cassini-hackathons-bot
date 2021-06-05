@@ -1,16 +1,37 @@
+const flatten = require('flat');
+const json2csv = require("json2csv");
+const write = require('write');
+
 const website = require("./website");
 const hackathonplatform = require("./hackathonplatform");
 const eventplatform = require("./eventplatform");
+
+let fields = [
+  "canbecontacted",
+  "website.firstname",
+  "website.lastname",
+  "website.email",
+  "website.countryofip",
+  "website.location",
+  "website.status",
+  "website.consent",
+  "junction.firstname",
+  "junction.lastname",
+  "junction.email",
+  "junction.countryofresidence",
+  "junction.birthdate",
+  "junction.location",
+  "junction.status",
+  "eventtia.firstname",
+  "eventtia.lastname",
+  "eventtia.email",
+  "eventtia.location"
+];
 
 class RegistrationsManager {
 
   constructor() {
     this.registrations = {};
-  }
-
-  getallregistrations(location = undefined) {
-    let registrations = Object.values(this.registrations);
-    return location ? registrations.filter(registration => registration.matcheslocation(location)) : registrations;
   }
 
   hasregistration(email) {
@@ -74,6 +95,21 @@ class RegistrationsManager {
     await Promise.all([this.loadsubscribers(), this.loadparticipants(), this.loadattendees()]);
   }
 
+  getallregistrations(location = undefined) {
+    let registrations = Object.values(this.registrations);
+    return location ? registrations.filter(registration => registration.matcheslocation(location)) : registrations;
+  }
+
+  export(location = undefined) {
+    return this.getallregistrations(location).map((registration) => registration.export());
+  }
+
+  async exportascsv(filepath, location = undefined) {
+    let registrations = this.export(location).map((record) => flatten(record));
+    let csv = json2csv.parse(registrations, { delimiter: ";", fields });
+    await write(filepath, csv);
+  }
+
 }
 
 class Registration {
@@ -95,6 +131,7 @@ class Registration {
 
   export() {
     return {
+      email: this.email,
       canbecontacted: this.canbecontacted,
       website: this.subscriber?.export(),
       junction: this.participant?.export(),
