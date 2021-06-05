@@ -1,6 +1,4 @@
 const path = require("path");
-const json2csv = require("json2csv");
-const write = require('write');
 
 const dotenv = require("dotenv");
 
