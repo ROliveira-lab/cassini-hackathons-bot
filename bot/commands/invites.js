@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js");
+
 const invitemanager = require("../invitemanager");
 const cassini = require("../../services/cassini");
 
@@ -5,10 +7,13 @@ function invites(interaction) {
   var location = interaction.data.options.find(option => option.name === "location").value;
   let invites = invitemanager.getinvitesforguild({ id: interaction.guild_id });
   let localinvites = invites.filter((invite) => invite.channel.parent.name === cassini.gethackathonname(location));
-  let description = localinvites.map(formatinvite).join('\n');
-  let title = `Invites for ${cassini.gethackathonname(location)}`
-  let timestamp = new Date();
-  return { type: 4, data: { embeds: [ { title, description, timestamp } ], flags: 1 << 6 } };
+
+  const embed = new MessageEmbed();
+  embed.setTitle(`Invites for ${cassini.gethackathonname(location)}`);
+  embed.setDescription(localinvites.map(formatinvite).join('\n'));
+  embed.setTimestamp();
+
+  return { type: 4, data: { embeds: [ embed ], flags: 1 << 6 } };
 }
 
 function groupinvitesbycategory(invites) {

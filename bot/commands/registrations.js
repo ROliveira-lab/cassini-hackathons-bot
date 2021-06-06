@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageAttachment } = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
 const cassini = require("../../services/cassini");
 const { RegistrationsManager, RegistrationsReport } = require("../../services/registrations");
@@ -43,7 +43,7 @@ module.exports = (client) => {
     const embed = new MessageEmbed();
     embed.setTitle(location ? `Registrations for ${cassini.gethackathonname(location)}` : `All registrations`);
 
-    embed.setDescription(`${registrationsreport.total()} unique people have registered for the hackathon across all platforms`)
+    embed.setDescription(`${registrationsreport.total()} unique people have registered for the hackathon across all platforms`);
 
     let websitetotal = registrationsreport.websitetotal();
     embed.addField("➜ Website registrations", `${websitetotal} registrations in total (${registrationsreport.websitesince(7, "days")} last week)`);
