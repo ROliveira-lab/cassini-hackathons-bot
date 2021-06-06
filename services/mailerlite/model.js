@@ -44,6 +44,14 @@ class Subscriber {
     return this.subscriber.type === "active";
   }
 
+  get isunconfirmed() {
+    return this.subscriber.type === "unconfirmed";
+  }
+
+  get isunsubscribed() {
+    return this.subscriber.type === "unsubscribed";
+  }
+
   get consent() {
     return this.subscriber.fields.find((field) => field.key === "marketing_permissions")?.value;
   }

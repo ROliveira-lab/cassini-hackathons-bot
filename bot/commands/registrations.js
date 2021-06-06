@@ -1,7 +1,7 @@
 const { MessageEmbed, MessageAttachment } = require("discord.js");
 
 const cassini = require("../../services/cassini");
-const { RegistrationsManager } = require("../../services/registrations");
+const { RegistrationsManager, RegistrationsReport } = require("../../services/registrations");
 
 module.exports = (client) => {
 
@@ -36,21 +36,33 @@ module.exports = (client) => {
 
     await registrationsmanager.loadalldata();
 
-    var registrations = registrationsmanager.getallregistrations(location);
+    let registrations = registrationsmanager.getallregistrations(location);
 
-    let websiteregistrations = registrations.filter((registration) => registration.subscriber && registration.subscriber.isactive && registration.subscriber.isconsented);
-
-    let today = new Date();
-    let lastweek = today.setDate(today.getDate() - 7);
-    let lastweekswebsiteregistrations = websiteregistrations.filter((r) => new Date(r.subscriber.created) > lastweek);
-
-    let additionaleventtiaregistrations = registrations.filter((registration) => !registration.subscriber && registration.attendee);
-
+    let registrationsreport = new RegistrationsReport(registrations);
+    
     const embed = new MessageEmbed();
-    embed.setTitle(location ? `Website registrations for ${cassini.gethackathonname(location)}` : `All website registrations`);
-    embed.addField("Total website registrations", `${websiteregistrations.length} registrations`, true);
-    embed.addField("Last week's website registrations", `${lastweekswebsiteregistrations.length} registrations`, true);
-    embed.addField("Additional event platform registrations", `${additionaleventtiaregistrations.length} registrations`);
+    embed.setTitle(location ? `Registrations for ${cassini.gethackathonname(location)}` : `All registrations`);
+
+    embed.setDescription(`${registrationsreport.total()} unique people have registered for the hackathon across all platforms`)
+
+    let websitetotal = registrationsreport.websitetotal();
+    embed.addField("➜ Website registrations", `${websitetotal} registrations in total (${registrationsreport.websitesince(7, "days")} last week)`);
+    embed.addField("Active", `${registrationsreport.websiteactive()} registrations`, true);
+    embed.addField("Unconfirmed", `${registrationsreport.websiteunconfirmed()} registrations`, true);
+    embed.addField("No consent", `${registrationsreport.websitenoconsent()} registrations`, true);
+
+    embed.addField("➜ Junction registrations", `${registrationsreport.junctiontotal()} registrations in total (${registrationsreport.junctionsince(7, "days")} last week)`);
+    let junctionfromwebsite =registrationsreport.junctionfromwebsite();
+    let junctionfromwebsiterelative = (junctionfromwebsite / websitetotal * 100).toFixed();
+    embed.addField("From website", `${junctionfromwebsite} registrations (${junctionfromwebsiterelative}%)`, true);
+    embed.addField("Additional", `${registrationsreport.junctionadditional()} registrations`, true);
+
+    embed.addField("➜ Eventtia registrations", `${registrationsreport.eventtiatotal()} registrations in total (${registrationsreport.eventtiasince(7, "days")} last week)`);
+    let eventtiafromwebsite = registrationsreport.eventtiafromwebsite();
+    let eventtiafromwebsiterelative = (eventtiafromwebsite / websitetotal * 100).toFixed();
+    embed.addField("From website", `${eventtiafromwebsite} registrations (${eventtiafromwebsiterelative}%)`, true);
+    embed.addField("Additional", `${registrationsreport.eventtiaadditional()} registrations`, true);
+
     embed.setTimestamp();
 
     return { type: 4, data: { embeds: [ embed ], flags: 1 << 6 } };
