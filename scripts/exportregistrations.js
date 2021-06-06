@@ -1,22 +1,23 @@
-const path = require("path");
-
 const dotenv = require("dotenv");
 
 dotenv.config();
 
 const cassini = require("../services/cassini");
-const { RegistrationsManager } = require("../services/registrations");
+const { RegistrationsManager, RegistrationsExporter } = require("../services/registrations");
 
 async function run() {
+
   let registrationsmanager = new RegistrationsManager();
+  
   await registrationsmanager.loadalldata();
 
-  registrationsmanager.exportascsv(path.join(__dirname, "../data", "registrations.csv"));
+  let registrationsexporter = new RegistrationsExporter(registrationsmanager, "data");
+
+  registrationsexporter.exportascsv(null);
 
   for (let location of cassini.getlocations()) {
-    let filename = `registrations_${location.replace(' ', '_').toLowerCase()}.csv`
-    registrationsmanager.exportascsv(path.join(__dirname, "../data", filename), location);
+    registrationsexporter.exportascsv(location);
   }
 }
 
-module.exports = run()
+module.exports = run();

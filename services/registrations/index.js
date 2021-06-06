@@ -6,11 +6,14 @@ const { RegistrationsManager, Registration } = require("./registrationsmanager")
 
 const { RegistrationsReport } = require("./registrationsreport");
 
+const { RegistrationsExporter } = require("./registrationsexporter");
+
 module.exports = {
   website,
   hackathonplatform,
   eventplatform,
   RegistrationsManager,
   Registration,
-  RegistrationsReport
+  RegistrationsReport,
+  RegistrationsExporter
 }

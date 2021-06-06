@@ -1,32 +1,6 @@
-const flatten = require('flat');
-const json2csv = require("json2csv");
-const write = require('write');
-
 const website = require("./website");
 const hackathonplatform = require("./hackathonplatform");
 const eventplatform = require("./eventplatform");
-
-let fields = [
-  "canbecontacted",
-  "website.firstname",
-  "website.lastname",
-  "website.email",
-  "website.countryofip",
-  "website.location",
-  "website.status",
-  "website.consent",
-  "junction.firstname",
-  "junction.lastname",
-  "junction.email",
-  "junction.countryofresidence",
-  "junction.birthdate",
-  "junction.location",
-  "junction.status",
-  "eventtia.firstname",
-  "eventtia.lastname",
-  "eventtia.email",
-  "eventtia.location"
-];
 
 class RegistrationsManager {
 
@@ -98,12 +72,6 @@ class RegistrationsManager {
   getallregistrations(location = undefined) {
     let registrations = Object.values(this.registrations);
     return location ? registrations.filter(registration => registration.matcheslocation(location)) : registrations;
-  }
-
-  async exportascsv(filepath, location = undefined) {
-    let records = this.getallregistrations(location).map((registration) => flatten(registration.export()));
-    let csv = json2csv.parse(records, { delimiter: ";", fields });
-    await write(filepath, csv);
   }
 
 }
