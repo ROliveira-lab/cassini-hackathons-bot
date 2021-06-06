@@ -16,7 +16,7 @@ async function authenticate(attempts = 3) {
       await page.goto("https://app.hackjunction.com/login");
       await page.waitForNavigation();
       await page.waitForSelector(".auth0-lock-quiet");
-      await page.screenshot({ path: 'screenshots/junction.png' });
+      // await page.screenshot({ path: 'screenshots/junction.png' });
       await page.type("input[type=email]", process.env.JUNCTION_EMAIL);
       await page.type("input[type=password]", process.env.JUNCTION_PASSWORD);
       await page.click("button[type=submit]");
