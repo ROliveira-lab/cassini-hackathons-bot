@@ -4,13 +4,16 @@ RUN apt-get update && apt-get install --yes --no-install-recommends chromium
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
+ENV HOME_FOLDER=/home/appuser DATA_FOLDER=/home/appuser/data APP_FOLDER=/usr/src/app
+
 RUN addgroup --system appuser && adduser --system --ingroup appuser appuser \
-    && mkdir -p /home/appuser && chown -R appuser:appuser /home/appuser \
-    && mkdir -p /usr/src/app && chown -R appuser:appuser /usr/src/app
+    && mkdir -p $HOME_FOLDER && chown -R appuser:appuser $HOME_FOLDER \
+    && mkdir -p $DATA_FOLDER && chown -R appuser:appuser $DATA_FOLDER \
+    && mkdir -p $APP_FOLDER && chown -R appuser:appuser $APP_FOLDER
 
 USER appuser
 
-WORKDIR /usr/src/app
+WORKDIR $APP_FOLDER
 
 ENV NODE_ENV=production
 

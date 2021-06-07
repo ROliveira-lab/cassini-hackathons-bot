@@ -96,7 +96,7 @@ module.exports = (client) => {
     
     await registrationsmanager.loadalldata();
 
-    let registrationsexporter = new RegistrationsExporter(registrationsmanager, "data");
+    let registrationsexporter = new RegistrationsExporter(registrationsmanager, process.env.DATA_FOLDER);
 
     let tags = [user.username, user.id, moment().toISOString()];
 

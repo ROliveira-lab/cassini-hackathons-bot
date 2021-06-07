@@ -11,7 +11,7 @@ async function run() {
   
   await registrationsmanager.loadalldata();
 
-  let registrationsexporter = new RegistrationsExporter(registrationsmanager, "data");
+  let registrationsexporter = new RegistrationsExporter(registrationsmanager, process.env.DATA_FOLDER);
 
   registrationsexporter.exportascsv(null);
 

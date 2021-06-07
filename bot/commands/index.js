@@ -10,7 +10,7 @@ module.exports = (client) => {
   // commands.set("self", require("./self"));
   // commands.set("where", require("./where"));
   commands.set("invites", require("./invites"));
-  // commands.set("registrations", require("./registrations")(client));
+  commands.set("registrations", require("./registrations")(client));
 
   async function registercommands(guild, commandprototypes) {
     await client.api.applications(client.user.id).guilds(guild.id).commands.put({ data: [] }).catch(console.error);
