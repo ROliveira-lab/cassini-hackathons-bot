@@ -10,23 +10,29 @@ const junctionapi = axios.create({ baseURL: "https://app.hackjunction.com/api/" 
 
 async function authenticate(attempts = 3) {
   for (let i = 0; i < attempts; i++) {
-    let browser = await puppeteer.launch();
+    let browser = await puppeteer.launch({
+      args: [
+        "--no-sandbox",
+        "--disable-gpu",
+        "--disable-dev-shm-usage"
+      ],
+      headless: true,
+    });
     try {
+      let start = moment();
       let page = await browser.newPage();
       await page.goto("https://app.hackjunction.com/login");
-      await page.waitForNavigation();
-      await page.waitForSelector(".auth0-lock-quiet");
-      // await page.screenshot({ path: 'screenshots/junction.png' });
-      await page.type("input[type=email]", process.env.JUNCTION_EMAIL);
-      await page.type("input[type=password]", process.env.JUNCTION_PASSWORD);
-      await page.click("button[type=submit]");
-      let callbackpage = await page.waitForNavigation();
-      let callbackparams = Object.fromEntries(new URLSearchParams(new URL(callbackpage.frame().url()).hash.substring(1)));
-      let token = callbackparams.id_token;
-      let expires = moment().add(callbackparams.expires_in, 'seconds');
-      return { token, expires };
+      await page.waitForSelector(".auth0-lock-input-block.auth0-lock-input-email input.auth0-lock-input[type=email]", { visible: true }).then((emailinput) => emailinput.type(process.env.JUNCTION_EMAIL));
+      await page.waitForSelector(".auth0-lock-input-block.auth0-lock-input-password input.auth0-lock-input[type=password]", { visible: true }).then((passwordinput) => passwordinput.type(process.env.JUNCTION_PASSWORD));
+      let waitforcallback = page.waitForResponse((response) => response.url().startsWith("https://hackjunction.eu.auth0.com/login/callback"));
+      await page.waitForSelector("button.auth0-lock-submit[type=submit]", { visible: true }).then((loginbutton) => loginbutton.click());
+      let callback = await waitforcallback;
+      let params = Object.fromEntries(new URLSearchParams(new URL(callback.headers().location).hash.substring(1)));
+      let end = moment();
+      console.error(`Junction authentication succeeded in ${end - start}ms`, params);
+      return { token: params.id_token, expires: moment().add(params.expires_in, 'seconds') };
     } catch (error) {
-      console.error(`Junction authentication failed: ${error.message}`);
+      console.error(`Junction authentication failed: ${error.message}`, error);
     } finally {
       await browser.close();
     }
