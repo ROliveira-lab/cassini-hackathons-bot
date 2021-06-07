@@ -1,36 +1,51 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy code to Azure App Service (Production)
+name: Build and deploy container app to Azure Web App - cassini-hackathons-bot
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: 'ubuntu-latest'
 
     steps:
-    - name: 'Checkout Github repository'
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-    - name: Set up Node.js version
-      uses: actions/setup-node@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Log in to registry
+      uses: docker/login-action@v1
       with:
-        node-version: '14.x'
+        registry: https://cassinidocker.azurecr.io/
+        username: ${{ secrets.AzureAppService_ContainerUsername_56c72681f61345c5ba47316d5e117198 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_4ce042e05a87434695517a79c97c9281 }}
 
-    - name: Run npm install, build, and test
-      run: |
-        npm install
-        npm run build --if-present
-        npm run test --if-present
+    - name: Build and push container image to registry
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: cassinidocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_56c72681f61345c5ba47316d5e117198 }}/cassini-hackathons-bot:${{ github.sha }}
+        file: ./Dockerfile
 
-    - name: Deploy web app code using publish profile credentials
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: cassini-hackathons-bot
-        slot-name: production
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_067AF2492A844BB0AD563547FCD33D99 }}
-        package: .
+        app-name: 'cassini-hackathons-bot'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_44a1ec15c4134c46ad6457251c58a697 }}
+        images: 'cassinidocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_56c72681f61345c5ba47316d5e117198 }}/cassini-hackathons-bot:${{ github.sha }}'
