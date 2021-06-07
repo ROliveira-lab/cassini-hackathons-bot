@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v1
       with:
         registry: https://cassinidocker.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_56c72681f61345c5ba47316d5e117198 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_4ce042e05a87434695517a79c97c9281 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_e4f2eb3e680d45139d3ad0e24e579cc8 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_9b69a6d1215749f181240c90f451feec }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: cassinidocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_56c72681f61345c5ba47316d5e117198 }}/cassini-hackathons-bot:${{ github.sha }}
+        tags: cassinidocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_e4f2eb3e680d45139d3ad0e24e579cc8 }}/cassini-hackathons-bot:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'cassini-hackathons-bot'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_44a1ec15c4134c46ad6457251c58a697 }}
-        images: 'cassinidocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_56c72681f61345c5ba47316d5e117198 }}/cassini-hackathons-bot:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_68a71d1d5c3c4139affe54b708be58d5 }}
+        images: 'cassinidocker.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_e4f2eb3e680d45139d3ad0e24e579cc8 }}/cassini-hackathons-bot:${{ github.sha }}'
