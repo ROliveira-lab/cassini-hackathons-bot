@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy container to Azure App Service (Production)
+name: Build and Deploy to Azure App Service as Container (Production)
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
     - name: Deploy web app container using publish profile credentials
       uses: azure/webapps-deploy@v2
       with:
-        app-name: cassini-hackathons-bot-container
+        app-name: cassini-hackathons-bot
         slot-name: production
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_361c00775cef4287960777d859838643 }}
         images: 'cassinidocker.azurecr.io/cassini-hackathons-bot:${{ github.sha }}'
