@@ -34,7 +34,6 @@ jobs:
         file: ./dockerfile
 
     - name: Deploy web app container using publish profile credentials
-      id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
         app-name: cassini-hackathons-bot-container
