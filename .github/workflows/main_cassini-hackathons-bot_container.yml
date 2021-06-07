@@ -33,7 +33,7 @@ jobs:
         tags: cassinidocker.azurecr.io/cassini-hackathons-bot:${{ github.sha }}
         file: ./dockerfile
 
-    - name: Deploy web app container using publish profile credentials
+    - name: Deploy container using publish profile credentials
       uses: azure/webapps-deploy@v2
       with:
         app-name: cassini-hackathons-bot

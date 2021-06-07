@@ -27,7 +27,7 @@ jobs:
         npm run build --if-present
         npm run test --if-present
 
-    - name: Deploy web app code using publish profile credentials
+    - name: Deploy code using publish profile credentials
       uses: azure/webapps-deploy@v2
       with:
         app-name: cassini-hackathons-bot
