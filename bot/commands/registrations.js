@@ -102,7 +102,7 @@ module.exports = (client) => {
 
     let csv = await registrationsexporter.exportascsv(location, tags);
     
-    let directmessagecontent = "Here is the registrations list you've requested. Download the file and store it safely. Always handle this personal data according to the applicable data protection rules and agreements. This message and its attachment will be deleted after 2 minutes."
+    let directmessagecontent = "Here is the registrations list you have requested. Download the file and store it safely. Always handle this personal data according to the applicable data protection rules and agreements. This message and its attachment will be deleted after 2 minutes."
     let directmessage = new APIMessage(user, { content: directmessagecontent, files: [ registrationsexporter.filepath(location, tags) ] });
     await directmessage.resolveData().resolveFiles();
     user.send(directmessage).then(message => { message.delete({ timeout: 120000 }); });
