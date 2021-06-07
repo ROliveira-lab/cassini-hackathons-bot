@@ -29,10 +29,10 @@ async function authenticate(attempts = 3) {
       let callback = await waitforcallback;
       let params = Object.fromEntries(new URLSearchParams(new URL(callback.headers().location).hash.substring(1)));
       let end = moment();
-      console.error(`Junction authentication succeeded in ${end - start}ms`, params);
+      console.error(`Junction authentication succeeded in ${end - start}ms`);
       return { token: params.id_token, expires: moment().add(params.expires_in, 'seconds') };
     } catch (error) {
-      console.error(`Junction authentication failed: ${error.message}`, error);
+      console.error(`Junction authentication failed: ${error.message}`);
     } finally {
       await browser.close();
     }
@@ -76,7 +76,19 @@ async function getparticipants(slug = defaultevent) {
   return response ? response.data.map(item => new Participant(item)) : undefined;
 }
 
+async function getparticipantbyid(participantid, slug = defaultevent) {
+  let participants = await getparticipants(slug);
+  return participants.find((participant) => participant.id === participantid);
+}
+
+async function getparticipantbyemail(participantemail, slug = defaultevent) {
+  let participants = await getparticipants(slug);
+  return participants.find((participant) => participant.email === participantemail);
+}
+
 module.exports = {
   getevent,
   getparticipants,
+  getparticipantbyid,
+  getparticipantbyemail
 }
