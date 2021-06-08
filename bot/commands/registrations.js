@@ -110,9 +110,9 @@ module.exports = (client) => {
         embed.addField("➜ Website registration", "No registration found");
       }
 
-      if (registration.partipant) {
-        embed.addField("➜ Junction registration", `Registered ${moment(registration.partipant.created).fromNow()}`);
-        // embed.addField("Current status", registration.partipant.status, true);
+      if (registration.participant) {
+        embed.addField("➜ Junction registration", `Registered ${moment(registration.participant.created).fromNow()}`);
+        // embed.addField("Current status", registration.participant.status, true);
       } else {
         embed.addField("➜ Junction registration", "No registration found");
       }
