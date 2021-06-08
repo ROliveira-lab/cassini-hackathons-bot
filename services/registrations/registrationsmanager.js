@@ -69,6 +69,16 @@ class RegistrationsManager {
     await Promise.all([this.loadsubscribers(), this.loadparticipants(), this.loadattendees()]);
   }
 
+  async findregistration(email, location = undefined) {
+    let [subscriber, participant, attendee] = await Promise.all([
+      website.findregistration(email, location),
+      hackathonplatform.findregistration(email, location),
+      eventplatform.findregistration(email, location)
+    ]);
+    let registration = new Registration(email, { subscriber, participant, attendee });
+    return registration.exists ? this.addregistration(registration) : undefined
+  }
+
   getallregistrations(location = undefined) {
     let registrations = Object.values(this.registrations);
     return location ? registrations.filter(registration => registration.matcheslocation(location)) : registrations;
@@ -87,6 +97,10 @@ class Registration {
 
   get canbecontacted() {
     return this.subscriber ? this.subscriber.isconsented && this.subscriber.isactive : false;
+  }
+
+  get exists() {
+    return !!this.subscriber || !!this.participant || !!this.attendee;
   }
 
   matcheslocation(location) {

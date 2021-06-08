@@ -44,8 +44,8 @@ async function getsubscriber(subscriberidoremail) {
   return response ? new Subscriber(response.data) : undefined;
 }
 
-async function getsubscriberingroup(groupid, subscriberid) {
-  let response = await mailerliteapi.get(`/groups/${groupid}/subscribers/${subscriberid}`).catch((error) => console.error(error.message, error.response.data));
+async function getsubscriberingroup(groupid, subscriberidoremail) {
+  let response = await mailerliteapi.get(`/groups/${groupid}/subscribers/${subscriberidoremail}`).catch((error) => console.error(error.message, error.response.data));
   return response ? new Subscriber(response.data) : undefined;
 }
 

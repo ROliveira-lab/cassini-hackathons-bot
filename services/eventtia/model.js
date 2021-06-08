@@ -83,6 +83,10 @@ class Attendee {
     return this.attendeetype?.location;
   }
 
+  get status() {
+    return this.attendee.attributes.status.toLowerCase()
+  }
+
   get isactive() {
     return this.attendee.attributes.status === "confirmed";
   }

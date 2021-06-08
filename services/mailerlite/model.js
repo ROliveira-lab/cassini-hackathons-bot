@@ -37,7 +37,7 @@ class Subscriber {
   }
 
   get status() {
-    return this.subscriber.type;
+    return this.subscriber.type.toLowerCase();
   }
 
   get isactive() {

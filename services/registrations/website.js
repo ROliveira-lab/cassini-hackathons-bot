@@ -11,7 +11,10 @@ async function getregistrations(location = undefined) {
 }
 
 async function findregistration(email, location = undefined) {
+  let group = await mailerlite.getgroupbyname(cassini.getshortname());
   let subscriber = await mailerlite.getsubscriber(email);
+  let subscribergroups = await mailerlite.getgroupsofsubscriber(email);
+  subscriber = subscribergroups.find((subscribergroup) => subscribergroup.name === group.name) ? subscriber : undefined
   if (!subscriber) { return undefined; }
   return location === undefined ? subscriber : (subscriber.location === location ? subscriber : undefined);
 }

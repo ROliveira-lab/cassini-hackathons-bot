@@ -82,6 +82,57 @@ module.exports = (client) => {
     return { type: 4, data: { embeds: [ embed ], flags: 1 << 6 } };
   }
 
+  async function registrationscheck(interaction) {
+
+    try {
+      var location = await determinelocation(interaction);
+    } catch (error) {
+      return { type: 4, data: { content: error.message, flags: 1 << 6 } };
+    }
+
+    var email = interaction.data.options?.find(option => option.name === "email")?.value;
+
+    let registrationsmanager = new RegistrationsManager();
+
+    let registration = await registrationsmanager.findregistration(email, location);
+    
+    const embed = new MessageEmbed();
+    embed.setTitle(`Registration check for ${email}`);
+
+    if (registration) {
+      embed.setDescription(`A registration with email address ${email} was found.`);
+
+      if (registration.subscriber) {
+        embed.addField("➜ Website registration", `Registered ${moment(registration.subscriber.created).fromNow()}`);
+        // embed.addField("Current status", registration.subscriber.status, true);
+        // embed.addField("Consent for the hackathon", registration.subscriber.isconsented ? "consent given" : "consent not given", true);
+      } else {
+        embed.addField("➜ Website registration", "No registration found");
+      }
+
+      if (registration.partipant) {
+        embed.addField("➜ Junction registration", `Registered ${moment(registration.partipant.created).fromNow()}`);
+        // embed.addField("Current status", registration.partipant.status, true);
+      } else {
+        embed.addField("➜ Junction registration", "No registration found");
+      }
+
+      if (registration.attendee) {
+        embed.addField("➜ Eventtia registration", `Registered ${moment(registration.attendee.created).fromNow()}`);
+        // embed.addField("Current status", registration.attendee.status, true);
+      } else {
+        embed.addField("➜ Eventtia registration", "No registration found");
+      }
+
+    } else {
+      embed.setDescription(`No registrations with email address ${email} found.`);
+    }
+
+    embed.setTimestamp();
+
+    return { type: 4, data: { embeds: [ embed ], flags: 1 << 6 } };
+  }
+
   async function registrationslist(interaction) {
 
     try {
@@ -146,12 +197,20 @@ module.exports = (client) => {
         ],
         run: registrationslist
       },
-      // {
-      //   name: "check",
-      //   description: "Check registrations for an email address.",
-      //   type: 1,
-      //   run: () => undefined
-      // },
+      {
+        name: "check",
+        description: "Check is a person is registered.",
+        type: 1,
+        options: [
+          {
+              name: "email",
+              description: "The email address of the person",
+              type: 3,
+              required: true
+          }
+        ],
+        run: registrationscheck
+      },
       // {
       //   name: "analyse",
       //   description: "Analyse registrations issues.",
