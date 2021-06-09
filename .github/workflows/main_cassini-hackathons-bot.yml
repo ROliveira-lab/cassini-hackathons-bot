@@ -30,13 +30,5 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: cassinidocker.azurecr.io/cassini-hackathons-bot:${{ github.sha }}
+        tags: cassinidocker.azurecr.io/cassini-hackathons-bot:latest
         file: ./dockerfile
-
-    - name: Deploy container using publish profile credentials
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: cassini-hackathons-bot
-        slot-name: production
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_361c00775cef4287960777d859838643 }}
-        images: 'cassinidocker.azurecr.io/cassini-hackathons-bot:${{ github.sha }}'
