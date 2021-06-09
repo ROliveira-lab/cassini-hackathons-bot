@@ -24,7 +24,7 @@ async function authenticate(attempts = 3) {
       await page.goto("https://app.hackjunction.com/login");
       await page.waitForSelector(".auth0-lock-input-block.auth0-lock-input-email input.auth0-lock-input[type=email]", { visible: true }).then((emailinput) => emailinput.type(process.env.JUNCTION_EMAIL));
       await page.waitForSelector(".auth0-lock-input-block.auth0-lock-input-password input.auth0-lock-input[type=password]", { visible: true }).then((passwordinput) => passwordinput.type(process.env.JUNCTION_PASSWORD));
-      let waitforcallback = page.waitForResponse((response) => response.url().startsWith("https://hackjunction.eu.auth0.com/login/callback"));
+      let waitforcallback = page.waitForResponse((response) => response.url().startsWith("https://hackjunction.eu.auth0.com/authorize/resume"));
       await page.waitForSelector("button.auth0-lock-submit[type=submit]", { visible: true }).then((loginbutton) => loginbutton.click());
       let callback = await waitforcallback;
       let params = Object.fromEntries(new URLSearchParams(new URL(callback.headers().location).hash.substring(1)));
