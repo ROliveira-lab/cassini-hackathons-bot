@@ -19,7 +19,7 @@ module.exports = (client) => {
   async function assignroles(member, level, country) {
     let roles = await getroles(member.guild, level, country);
     roles = roles.filter(role => role != undefined && role.editable);
-    member.roles.set(roles);
+    await member.roles.set(roles);
     return roles;
   }
 
