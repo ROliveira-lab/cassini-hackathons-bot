@@ -82,7 +82,7 @@ module.exports = (client) => {
 
     var location = await determinelocation(interaction);
 
-    var email = interaction.data.options?.find(option => option.name === "email")?.value;
+    var email = interaction.data.options.find(option => option.name === "email").value;
 
     let registrationsmanager = new RegistrationsManager();
 
@@ -92,7 +92,12 @@ module.exports = (client) => {
     embed.setTitle(`Registration check for ${email}`);
 
     if (registration) {
-      embed.setDescription(`A registration with email address ${email} was found.`);
+
+      if (location) {
+        embed.setDescription(`A registration was found for ${cassini.gethackathonname(location)}.`);
+      } else {
+        embed.setDescription(`A registration was found.`);
+      }
 
       if (registration.subscriber) {
         embed.addField("➜ Website registration", `Registered ${moment(registration.subscriber.created).fromNow()}`);
@@ -117,7 +122,13 @@ module.exports = (client) => {
       }
 
     } else {
-      embed.setDescription(`No registrations with email address ${email} found.`);
+
+      if (location) {
+        embed.setDescription(`No registration was found for ${cassini.gethackathonname(location)}.`);
+      } else {
+        embed.setDescription(`No registration was found.`);
+      }
+
     }
 
     embed.setTimestamp();
