@@ -11,6 +11,7 @@ module.exports = (client) => {
   // commands.set("where", require("./where"));
   commands.set("invites", require("./invites"));
   commands.set("registrations", require("./registrations")(client));
+  commands.set("allow", require("./allow")(client));
 
   async function registercommands(guild, commandprototypes) {
     await client.api.applications(client.user.id).guilds(guild.id).commands.put({ data: [] }).catch(console.error);
@@ -65,7 +66,15 @@ module.exports = (client) => {
 
       await client.api.interactions(interaction.id, interaction.token).callback.post({ data: { type: 5, data: { flags: 1 << 6 } } }).catch(console.error);
 
-      let data = await command.run(interaction);
+      try {
+        var data = await command.run(interaction);
+      } catch (error) {
+        if (error.data != undefined) {
+          var data = error;
+        } else {
+          throw error;
+        }
+      }
 
       await client.api.webhooks(interaction.application_id, interaction.token).messages("@original").patch({ data: data.data }).catch(console.error);
     }
