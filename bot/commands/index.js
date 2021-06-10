@@ -62,17 +62,11 @@ module.exports = (client) => {
 
       await client.api.interactions(interaction.id, interaction.token).callback.post({ data: { type: 5, data: { flags: 1 << 6 } } }).catch(console.error);
 
-      try {
-        var data = await command.run(interaction);
-      } catch (error) {
-        if (error.data != undefined) {
-          var data = error;
-        } else {
-          throw error;
-        }
-      }
+      var data = await command.run(interaction).catch((error) => {
+        if (error.data != undefined) { return error.data; } else { throw error; }
+      });
 
-      await client.api.webhooks(interaction.application_id, interaction.token).messages("@original").patch({ data: data.data }).catch(console.error);
+      await client.api.webhooks(interaction.application_id, interaction.token).messages("@original").patch({ data }).catch(console.error);
     }
   });
 

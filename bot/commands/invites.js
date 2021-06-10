@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 const invitemanager = require("../invitemanager");
 const cassini = require("../../services/cassini");
 
-function invites(interaction) {
+async function invites(interaction) {
   var location = interaction.data.options.find(option => option.name === "location").value;
   let invites = invitemanager.getinvitesforguild({ id: interaction.guild_id });
   let localinvites = invites.filter((invite) => invite.channel.parent.name === cassini.gethackathonname(location));
@@ -13,7 +13,7 @@ function invites(interaction) {
   embed.setDescription(localinvites.map(formatinvite).join('\n'));
   embed.setTimestamp();
 
-  return { type: 4, data: { embeds: [ embed ], flags: 1 << 6 } };
+  return { embeds: [ embed ], flags: 1 << 6 };
 }
 
 function groupinvitesbycategory(invites) {

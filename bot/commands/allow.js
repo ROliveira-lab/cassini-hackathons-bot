@@ -125,7 +125,7 @@ module.exports = (client) => {
 
     let content = `I have changed the access level of ${member} to ${level} for ${cassini.gethackathonname(location)}.`;
 
-    return { type: 4, data: { content, flags: 1 << 6 } };
+    return { content, flags: 1 << 6 };
   }
 
   return {

@@ -25,11 +25,11 @@ module.exports = (client) => {
       crewmemberlocation = cassini.getcrewmemberlocation(rolenames);
 
       if (!crewmemberlocation) {
-        throw new Error(`You do not have permission to see registrations for ${cassini.gethackathonname(location)}. I could not find a local crew member role to determine your hackathon location.`);
+        throw { data: { content: `You do not have permission to see registrations for ${cassini.gethackathonname(location)}. I could not find a local crew member role to determine your hackathon location.`, flags: 1 << 6 } };
       }
 
       if (location && location != crewmemberlocation) {
-        throw new Error(`You do not have permission to see registrations for ${cassini.gethackathonname(location)}. I found a local crew member role for ${cassini.gethackathonname(crewmemberlocation)}.`);
+        throw { data: { content: `You do not have permission to see registrations for ${cassini.gethackathonname(location)}. I found a local crew member role for ${cassini.gethackathonname(crewmemberlocation)}.`, flags: 1 << 6 } };
       }
 
       location = crewmemberlocation;
@@ -40,11 +40,7 @@ module.exports = (client) => {
 
   async function registrationsstatus(interaction) {
 
-    try {
-      var location = await determinelocation(interaction);
-    } catch (error) {
-      return { type: 4, data: { content: error.message, flags: 1 << 6 } };
-    }
+    var location = await determinelocation(interaction);
 
     let registrationsmanager = new RegistrationsManager();
 
@@ -79,16 +75,12 @@ module.exports = (client) => {
 
     embed.setTimestamp();
 
-    return { type: 4, data: { embeds: [ embed ], flags: 1 << 6 } };
+    return { embeds: [ embed ], flags: 1 << 6 };
   }
 
   async function registrationscheck(interaction) {
 
-    try {
-      var location = await determinelocation(interaction);
-    } catch (error) {
-      return { type: 4, data: { content: error.message, flags: 1 << 6 } };
-    }
+    var location = await determinelocation(interaction);
 
     var email = interaction.data.options?.find(option => option.name === "email")?.value;
 
@@ -130,16 +122,12 @@ module.exports = (client) => {
 
     embed.setTimestamp();
 
-    return { type: 4, data: { embeds: [ embed ], flags: 1 << 6 } };
+    return { embeds: [ embed ], flags: 1 << 6 };
   }
 
   async function registrationslist(interaction) {
 
-    try {
-      var location = await determinelocation(interaction);
-    } catch (error) {
-      return { type: 4, data: { content: error.message, flags: 1 << 6 } };
-    }
+    var location = await determinelocation(interaction);
 
     let user = await client.users.fetch(interaction.member.user.id);
     
@@ -160,7 +148,7 @@ module.exports = (client) => {
 
     let content = "I have sent you the registrations list in a direct message.";
 
-    return { type: 4, data: { content, flags: 1 << 6 } };
+    return { content, flags: 1 << 6 };
   }
 
   return {

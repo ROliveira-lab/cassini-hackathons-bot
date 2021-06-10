@@ -1,5 +1,5 @@
-function ping(interaction) {
-  return { type: 4, data: { content: `Pong!` } };
+async function ping(interaction) {
+  return { content: `Pong!` };
 }
 
 module.exports = {
