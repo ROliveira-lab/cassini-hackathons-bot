@@ -55,7 +55,7 @@ class Participant {
   }
 
   get location() {
-    return this.participant.answers.CustomAnswers.find((answer) => answer.key === "hackathon-location")?.value;
+    return this.participant.answers.CustomAnswers?.find((answer) => answer.key === "hackathon-location")?.value;
   }
 
   get status() {
