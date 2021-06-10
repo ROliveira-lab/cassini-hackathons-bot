@@ -5,10 +5,6 @@ module.exports = (client) => {
   const commands = new Collection();
 
   commands.set("ping", require("./ping"));
-  // commands.set("echo", require("./echo"));
-  // commands.set("sum", require("./sum"));
-  // commands.set("self", require("./self"));
-  // commands.set("where", require("./where"));
   commands.set("invites", require("./invites"));
   commands.set("registrations", require("./registrations")(client));
   commands.set("allow", require("./allow")(client));
