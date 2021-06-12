@@ -41,7 +41,7 @@ module.exports = (client) => {
 
     var location = await determinelocation(interaction);
 
-    let registrationsmanager = new RegistrationsManager({ subscribergroup: cassini.getshortname() });
+    let registrationsmanager = new RegistrationsManager({ subscribergroup: cassini.getshortname(), nounsubscribed: true });
 
     let registrationsreport = new RegistrationsReport(registrationsmanager);
 
@@ -81,7 +81,7 @@ module.exports = (client) => {
 
     var email = interaction.data.options.find(option => option.name === "email").value;
 
-    let registrationsmanager = new RegistrationsManager({ subscribergroup: cassini.getshortname() });
+    let registrationsmanager = new RegistrationsManager({ subscribergroup: cassini.getshortname(), nounsubscribed: true });
 
     await registrationsmanager.loadone(email);
 
@@ -141,7 +141,7 @@ module.exports = (client) => {
 
     let user = await client.users.fetch(interaction.member.user.id);
 
-    let registrationsmanager = new RegistrationsManager({ subscribergroup: cassini.getshortname() });
+    let registrationsmanager = new RegistrationsManager({ subscribergroup: cassini.getshortname(), nounsubscribed: true });
 
     let registrationsexport = new RegistrationsExport(registrationsmanager, process.env.DATA_FOLDER);
 

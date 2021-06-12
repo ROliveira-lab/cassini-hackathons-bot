@@ -8,6 +8,7 @@ class RegistrationsManager {
   constructor(filteroptions = {}) {
     this.location = filteroptions.location;
     this.subscribergroup = filteroptions.subscribergroup;
+    this.nounsubscribed = filteroptions.nounsubscribed;
     this.registrations = {};
     this.loading = undefined;
   }
@@ -72,7 +73,7 @@ class RegistrationsManager {
     } else {
       var subscribers = await mailerlite.getsubscribers(null);
     }
-    subscribers = subscribers.filter((subscriber) => subscriber.status != "unsubscribed");
+    subscribers = this.nounsubscribed ? subscribers.filter((subscriber) => subscriber.isunsubscribed) : subscribers;
     subscribers = this.location ? subscribers.filter((subscriber) => subscriber.location === this.location) : subscribers;
     for (let subscriber of subscribers) {
       this.addsubscriber(subscriber);
@@ -110,6 +111,7 @@ class RegistrationsManager {
       let subscribergroups = await mailerlite.getgroupsofsubscriber(email);
       if (!subscribergroups.find((subscribergroup) => subscribergroup.name === this.subscribergroup)) { return; }
     }
+    if (this.nounsubscribed && subscriber.isunsubscribed) { return; }
     if (this.location && subscriber.location !== this.location) { return; }
     this.addsubscriber(subscriber);
   }

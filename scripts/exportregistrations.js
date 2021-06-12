@@ -8,7 +8,7 @@ async function run() {
 
   const { RegistrationsManager, RegistrationsExport } = require("../services/registrations");
 
-  let registrationsexport = new RegistrationsExport(new RegistrationsManager({ subscribergroup: cassini.getshortname() }), process.env.DATA_FOLDER);
+  let registrationsexport = new RegistrationsExport(new RegistrationsManager({ subscribergroup: cassini.getshortname(), nounsubscribed: true }), process.env.DATA_FOLDER);
 
   registrationsexport.exportascsv(null);
 
