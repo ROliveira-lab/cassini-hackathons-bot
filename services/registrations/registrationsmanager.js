@@ -5,7 +5,7 @@ const eventtia = require("../eventtia");
 
 class RegistrationsManager {
 
-  constructor(filteroptions) {
+  constructor(filteroptions = {}) {
     this.location = filteroptions.location;
     this.subscribergroup = filteroptions.subscribergroup;
     this.registrations = {};
