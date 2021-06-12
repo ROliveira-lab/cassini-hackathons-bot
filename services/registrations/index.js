@@ -8,6 +8,8 @@ const { RegistrationsReport } = require("./registrationsreport");
 
 const { RegistrationsExporter } = require("./registrationsexporter");
 
+const { RegistrationsAnalysis } = require("./registrationsanalysis");
+
 module.exports = {
   website,
   hackathonplatform,
@@ -15,5 +17,6 @@ module.exports = {
   RegistrationsManager,
   Registration,
   RegistrationsReport,
-  RegistrationsExporter
+  RegistrationsExporter,
+  RegistrationsAnalysis
 }

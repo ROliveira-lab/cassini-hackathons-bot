@@ -36,6 +36,10 @@ class Subscriber {
     return this.subscriber.fields.find((field) => field.key === "hackathon_location")?.value;
   }
 
+  get discordurl() {
+    return this.subscriber.fields.find((field) => field.key === "discord_url")?.value;
+  }
+
   get status() {
     return this.subscriber.type.toLowerCase();
   }
