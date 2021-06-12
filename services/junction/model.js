@@ -62,8 +62,8 @@ class Participant {
     return this.participant.status.toLowerCase();
   }
 
-  get iscomplete() {
-    return this.participant.status != "incomplete";
+  get isactive() {
+    return this.participant.status === "checkedIn";
   }
 
   export() {

@@ -14,10 +14,12 @@ class RegistrationsManager {
   }
 
   hasregistration(email) {
+    email = email.toLowerCase();
     return email in this.registrations;
   }
 
   getregistration(email, location = undefined) {
+    email = email.toLowerCase();
     let registration = this.registrations[email];
     return location ? (registration.matcheslocation(location) ? registration : undefined) : registration;
   }
@@ -33,6 +35,7 @@ class RegistrationsManager {
   }
 
   getorcreateregistration(email) {
+    email = email.toLowerCase();
     if (this.hasregistration(email)) {
       return this.getregistration(email);
     } else {
@@ -134,11 +137,11 @@ class RegistrationsManager {
 
 class Registration {
 
-  constructor(email, data) {
+  constructor(email, data = {}) {
     this.email = email;
-    this.subscriber = data?.subscriber;
-    this.participant = data?.participant;
-    this.attendee = data?.attendee;
+    this.subscriber = data.subscriber;
+    this.participant = data.participant;
+    this.attendee = data.attendee;
   }
 
   get canbecontacted() {

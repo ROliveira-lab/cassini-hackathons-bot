@@ -108,11 +108,47 @@ class WebsiteButNotOnEventtia extends RegistrationTest {
 
 }
 
+class WebsiteButNotOnJunction extends RegistrationTest {
+
+  async test(registration) {
+    if (registration.subscriber && registration.subscriber.isactive && registration.subscriber.isconsented) {
+      return registration.participant
+    }
+    return true
+  }
+
+}
+
+class WebsiteOnEventtiaButNotActive extends RegistrationTest {
+
+  async test(registration) {
+    if (registration.subscriber && registration.attendee) {
+      return registration.attendee.isactive
+    }
+    return true
+  }
+
+}
+
+class WebsiteOnJunctionButNotActive extends RegistrationTest {
+
+  async test(registration) {
+    if (registration.subscriber && registration.participant) {
+      return registration.participant.isactive
+    }
+    return true
+  }
+  
+}
+
 module.exports = {
   WebsiteButNotActive,
   WebsiteButNotConsented,
   WebsiteUnknownLocation,
   WebsiteNoDiscordLink,
   WebsiteWrongDiscordLinkForLocation,
-  WebsiteButNotOnEventtia
+  WebsiteButNotOnEventtia,
+  WebsiteButNotOnJunction,
+  WebsiteOnEventtiaButNotActive,
+  WebsiteOnJunctionButNotActive
 }

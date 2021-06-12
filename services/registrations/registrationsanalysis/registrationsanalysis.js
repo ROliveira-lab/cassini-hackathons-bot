@@ -50,6 +50,7 @@ class RegistrationsAnalysis {
             fixed++;
             console.log(chalk.blue(`${result.registration.email} FIXED`));
           }
+        
         }
 
         console.log("");
@@ -91,6 +92,7 @@ function importtests() {
   let testclassgroups = [
     require("./registrationtestswebsite"),
     require("./registrationtestseventtia"),
+    require("./registrationtestsjunction"),
   ]
   let testclasses = Object.assign({}, ...testclassgroups);
   return testclasses;

@@ -1,5 +1,7 @@
 const { RegistrationTest } = require("./registrationtest");
 
+let sleep = (seconds) => new Promise(resolve => setTimeout(resolve, seconds * 1000));
+
 class EventtiaButNotOnWebsite extends RegistrationTest {
 
   async init() {
@@ -7,7 +9,7 @@ class EventtiaButNotOnWebsite extends RegistrationTest {
   }
 
   async test(registration) {
-    if (registration.attendee) {
+    if (registration.attendee && registration.attendee.isactive) {
       return registration.subscriber;
     }
     return true;
@@ -17,7 +19,7 @@ class EventtiaButNotOnWebsite extends RegistrationTest {
     let subscribergroups = await this.services.mailerlite.getgroupsofsubscriber(registration.attendee.email);
     if (subscribergroups) {
       for (let group of subscribergroups) {
-        await mailerlite.removesubscriberfromgroup(group.id, registration.attendee.email);
+        await this.services.mailerlite.removesubscriberfromgroup(group.id, registration.attendee.email);
       }
       await sleep(10);
     }
