@@ -141,12 +141,8 @@ module.exports = (client) => {
     var location = await determinelocation(interaction);
 
     let user = await client.users.fetch(interaction.member.user.id);
-    
-    let registrationsmanager = new RegistrationsManager();
-    
-    await registrationsmanager.loadalldata();
 
-    let registrationsexporter = new RegistrationsExporter(registrationsmanager, process.env.DATA_FOLDER);
+    let registrationsexporter = new RegistrationsExporter(new RegistrationsManager(), process.env.DATA_FOLDER);
 
     let tags = [user.username, user.id, moment().toISOString()];
 

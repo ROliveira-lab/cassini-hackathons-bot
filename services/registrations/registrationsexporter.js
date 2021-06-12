@@ -45,6 +45,7 @@ class RegistrationsExporter {
   }
 
   async exportascsv(location = undefined, tags = []) {
+    await this.registrationsmanager.loadalldata();
     let registrations = this.registrationsmanager.getallregistrations(location);
     let records = registrations.map((registration) => flatten(registration.export()));
     let csv = json2csv.parse(records, { delimiter: ";", fields });

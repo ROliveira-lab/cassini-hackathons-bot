@@ -6,6 +6,7 @@ class RegistrationsManager {
 
   constructor() {
     this.registrations = {};
+    this.loading = undefined;
   }
 
   hasregistration(email) {
@@ -65,8 +66,15 @@ class RegistrationsManager {
     }
   }
 
-  async loadalldata() {
-    await Promise.all([this.loadsubscribers(), this.loadparticipants(), this.loadattendees()]);
+  loadalldata() {
+    if (!this.loading) {
+      this.loading = Promise.all([
+        this.loadsubscribers(),
+        this.loadparticipants(),
+        this.loadattendees()
+      ]);
+    }
+    return this.loading;
   }
 
   async findregistration(email, location = undefined) {
