@@ -10,8 +10,3 @@ async function findregistration(email, location = undefined) {
   if (!participant) { return undefined; }
   return location === undefined ? participant : (participant.location === location ? participant : undefined);
 }
-
-module.exports = {
-  getregistrations,
-  findregistration
-}

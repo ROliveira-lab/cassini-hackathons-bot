@@ -17,7 +17,7 @@ class RegistrationsAnalysis {
 
       console.log("Loading all registrations data ...")
 
-      await this.registrationsmanager.loadalldata();
+      await this.registrationsmanager.loadall();
   
       let registrations = this.registrationsmanager.getallregistrations();
 

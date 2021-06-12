@@ -16,9 +16,3 @@ async function createregistration(properties, registerforactivities = false) {
   let attendee = await eventtia.registerattendee(properties, activities);
   return attendee;
 }
-
-module.exports = {
-  getregistrations,
-  findregistration,
-  createregistration,
-}

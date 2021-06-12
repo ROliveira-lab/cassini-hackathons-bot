@@ -44,7 +44,7 @@ module.exports = (client) => {
 
     let registrationsmanager = new RegistrationsManager();
 
-    await registrationsmanager.loadalldata();
+    await registrationsmanager.loadall();
 
     let registrations = registrationsmanager.getallregistrations(location);
 
@@ -86,7 +86,9 @@ module.exports = (client) => {
 
     let registrationsmanager = new RegistrationsManager();
 
-    let registration = await registrationsmanager.findregistration(email, location);
+    await registrationsmanager.loadone(email);
+
+    let registration = await registrationsmanager.getregistration(email, location);
     
     const embed = new MessageEmbed();
     embed.setTitle(`Registration check for ${email}`);

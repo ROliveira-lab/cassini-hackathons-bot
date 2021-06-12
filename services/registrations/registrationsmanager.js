@@ -1,6 +1,7 @@
-const website = require("./website");
-const hackathonplatform = require("./hackathonplatform");
-const eventplatform = require("./eventplatform");
+const cassini = require("../cassini");
+const mailerlite = require("../mailerlite");
+const junction = require("../junction");
+const eventtia = require("../eventtia");
 
 class RegistrationsManager {
 
@@ -13,8 +14,14 @@ class RegistrationsManager {
     return email in this.registrations;
   }
 
-  getregistration(email) {
-    return this.registrations[email];
+  getregistration(email, location = undefined) {
+    let registration = this.registrations[email];
+    return location ? (registration.matcheslocation(location) ? registration : undefined) : registration;
+  }
+
+  getallregistrations(location = undefined) {
+    let registrations = Object.values(this.registrations);
+    return location ? registrations.filter(registration => registration.matcheslocation(location)) : registrations;
   }
 
   addregistration(registration) {
@@ -45,36 +52,74 @@ class RegistrationsManager {
     registration.attendee = attendee;
   }
 
-  async loadsubscribers() {
-    let subscribers = await website.getregistrations()
+
+  async loadall(location = undefined) {
+    if (!this.loading) {
+      this.loading = Promise.all([
+        this.loadallsubscribers(location),
+        this.loadallparticipants(location),
+        this.loadallattendees(location)
+      ]);
+    }
+    return this.loading;
+  }
+
+  async loadallsubscribers(location = undefined) {
+    let group = await mailerlite.getgroupbyname(cassini.getshortname());
+    let subscribers = await mailerlite.getsubscribersingroup(group.id, null);
+    subscribers = subscribers.filter((subscriber) => subscriber.status != "unsubscribed");
+    subscribers = location ? subscribers.filter(r => r.location === location) : subscribers;
     for (let subscriber of subscribers) {
       this.addsubscriber(subscriber);
     }
   }
 
-  async loadparticipants() {
-    let participants = await hackathonplatform.getregistrations();
+  async loadallparticipants(location = undefined) {
+    let participants = await junction.getparticipants();
+    participants = location ? participants.filter(r => r.location === location) : participants;
     for (let participant of participants) {
       this.addparticipant(participant);
     }
   }
 
-  async loadattendees() {
-    let attendees = await eventplatform.getregistrations();
+  async loadallattendees(location = undefined) {
+    let attendees = await eventtia.getattendees();
+    attendees = location ? attendees.filter(r => r.location === location) : attendees;
     for (let attendee of attendees) {
       this.addattendee(attendee);
     }
   }
 
-  loadalldata() {
-    if (!this.loading) {
-      this.loading = Promise.all([
-        this.loadsubscribers(),
-        this.loadparticipants(),
-        this.loadattendees()
-      ]);
-    }
-    return this.loading;
+  async loadone(email, location = undefined) {
+    await Promise.all([
+      this.loadonesubscriber(email, location),
+      this.loadoneparticipant(email, location),
+      this.loadoneattendee(email, location)
+    ]);
+  }
+
+  async loadonesubscriber(email, location = undefined) {
+    let subscriber = await mailerlite.getsubscriber(email);
+    if (!subscriber) { return; }
+    let group = await mailerlite.getgroupbyname(cassini.getshortname());
+    let subscribergroups = await mailerlite.getgroupsofsubscriber(email);
+    if (!subscribergroups.find((subscribergroup) => subscribergroup.name === group.name)) { return; }
+    if (location && subscriber.location !== location) { return; }
+    this.addsubscriber(subscriber);
+  }
+
+  async loadoneparticipant(email, location = undefined) {
+    let participant = await junction.getparticipantbyemail(email);
+    if (!participant) { return undefined; }
+    if (location && attendee.location !== location) { return; }
+    this.addparticipant(participant);
+  }
+
+  async loadoneattendee(email, location = undefined) {
+    let attendee = await eventtia.getattendeebyemail(email);
+    if (!attendee) { return; }
+    if (location && attendee.location !== location) { return; }
+    this.addattendee(attendee);
   }
 
   async findregistration(email, location = undefined) {
@@ -85,11 +130,6 @@ class RegistrationsManager {
     ]);
     let registration = new Registration(email, { subscriber, participant, attendee });
     return registration.exists ? this.addregistration(registration) : undefined
-  }
-
-  getallregistrations(location = undefined) {
-    let registrations = Object.values(this.registrations);
-    return location ? registrations.filter(registration => registration.matcheslocation(location)) : registrations;
   }
 
 }
