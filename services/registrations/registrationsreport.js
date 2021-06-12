@@ -6,8 +6,14 @@ function count(array, predicate) {
 
 class RegistrationsReport {
 
-  constructor(registrations) {
-    this.registrations = registrations;
+  constructor(registrationsmanager) {
+    this.registrationsmanager = registrationsmanager;
+    this.registrations = [];
+  }
+
+  async generate(location = undefined) {
+    await this.registrationsmanager.loadall();
+    this.registrations = this.registrationsmanager.getallregistrations(location);
   }
 
   total() {

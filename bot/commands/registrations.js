@@ -43,11 +43,9 @@ module.exports = (client) => {
 
     let registrationsmanager = new RegistrationsManager({ subscribergroup: cassini.getshortname() });
 
-    await registrationsmanager.loadall();
+    let registrationsreport = new RegistrationsReport(registrationsmanager);
 
-    let registrations = registrationsmanager.getallregistrations(location);
-
-    let registrationsreport = new RegistrationsReport(registrations);
+    await registrationsreport.generate(location);
     
     const embed = new MessageEmbed();
     embed.setTitle(location ? `Registrations for ${cassini.gethackathonname(location)}` : `All registrations`);
@@ -143,11 +141,11 @@ module.exports = (client) => {
 
     let user = await client.users.fetch(interaction.member.user.id);
 
-    let registrationsexport = new RegistrationsExport(new RegistrationsManager({ subscribergroup: cassini.getshortname() }), process.env.DATA_FOLDER);
+    let registrationsmanager = new RegistrationsManager({ subscribergroup: cassini.getshortname() });
 
-    let tags = [user.username, user.id, moment().toISOString()];
+    let registrationsexport = new RegistrationsExport(registrationsmanager, process.env.DATA_FOLDER);
 
-    let csv = await registrationsexport.exportascsv(location, tags);
+    let csv = await registrationsexport.exportascsv(location, [user.username, user.id, moment().toISOString()]);
     
     let directmessagecontent = "Here is the registrations list you have requested. Download the file and store it safely. Always handle these personal data according to the applicable data protection rules and agreements. This message and its attachment will be deleted after 2 minutes."
     let directmessage = new APIMessage(user, { content: directmessagecontent, files: [ registrationsexport.filepath(location, tags) ] });
