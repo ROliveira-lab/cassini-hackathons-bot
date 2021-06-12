@@ -2,7 +2,7 @@ const moment = require("moment");
 const { MessageEmbed, APIMessage } = require("discord.js");
 
 const cassini = require("../../services/cassini");
-const { RegistrationsManager, RegistrationsReport, RegistrationsExporter } = require("../../services/registrations");
+const { RegistrationsManager, RegistrationsReport, RegistrationsExport } = require("../../services/registrations");
 
 module.exports = (client) => {
 
@@ -143,14 +143,14 @@ module.exports = (client) => {
 
     let user = await client.users.fetch(interaction.member.user.id);
 
-    let registrationsexporter = new RegistrationsExporter(new RegistrationsManager({ subscribergroup: cassini.getshortname() }), process.env.DATA_FOLDER);
+    let registrationsexport = new RegistrationsExport(new RegistrationsManager({ subscribergroup: cassini.getshortname() }), process.env.DATA_FOLDER);
 
     let tags = [user.username, user.id, moment().toISOString()];
 
-    let csv = await registrationsexporter.exportascsv(location, tags);
+    let csv = await registrationsexport.exportascsv(location, tags);
     
     let directmessagecontent = "Here is the registrations list you have requested. Download the file and store it safely. Always handle these personal data according to the applicable data protection rules and agreements. This message and its attachment will be deleted after 2 minutes."
-    let directmessage = new APIMessage(user, { content: directmessagecontent, files: [ registrationsexporter.filepath(location, tags) ] });
+    let directmessage = new APIMessage(user, { content: directmessagecontent, files: [ registrationsexport.filepath(location, tags) ] });
     await directmessage.resolveData().resolveFiles();
     user.send(directmessage).then(message => { message.delete({ timeout: 120000 }); });
 

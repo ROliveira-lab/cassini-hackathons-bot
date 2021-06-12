@@ -6,14 +6,14 @@ const cassini = require("../services/cassini");
 
 async function run() {
 
-  const { RegistrationsManager, RegistrationsExporter } = require("../services/registrations");
+  const { RegistrationsManager, RegistrationsExport } = require("../services/registrations");
 
-  let registrationsexporter = new RegistrationsExporter(new RegistrationsManager({ subscribergroup: cassini.getshortname() }), process.env.DATA_FOLDER);
+  let registrationsexport = new RegistrationsExport(new RegistrationsManager({ subscribergroup: cassini.getshortname() }), process.env.DATA_FOLDER);
 
-  registrationsexporter.exportascsv(null);
+  registrationsexport.exportascsv(null);
 
   for (let location of cassini.getlocations()) {
-    registrationsexporter.exportascsv(location);
+    registrationsexport.exportascsv(location);
   }
 }
 

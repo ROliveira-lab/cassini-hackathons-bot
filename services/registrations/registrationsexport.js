@@ -25,7 +25,7 @@ let fields = [
   "eventtia.location"
 ];
 
-class RegistrationsExporter {
+class RegistrationsExport {
 
   constructor(registrationsmanager, path) {
     this.registrationsmanager = registrationsmanager;
@@ -54,4 +54,4 @@ class RegistrationsExporter {
   }
 }
 
-module.exports = { RegistrationsExporter }
+module.exports = { RegistrationsExport: RegistrationsExport }
