@@ -32,14 +32,14 @@ class RegistrationsExporter {
     this.path = path;
   }
 
-  filename(location, tags) {
+  filename(location = undefined, tags) {
     let filenameparts = ["registrations"]
     filenameparts.push(location ? location.replace(' ', '_').toLowerCase() : "all");
     filenameparts.push(...tags);
     return filenameparts.join('_') + ".csv";
   }
 
-  filepath(location, tags) {
+  filepath(location = undefined, tags) {
     let filename = this.filename(location, tags);
     return path.join(this.path, filename);
   }

@@ -16,12 +16,12 @@ class RegistrationsManager {
     return email in this.registrations;
   }
 
-  getregistration(email, location = this.location) {
+  getregistration(email, location = undefined) {
     let registration = this.registrations[email];
     return location ? (registration.matcheslocation(location) ? registration : undefined) : registration;
   }
 
-  getallregistrations(location = this.location) {
+  getallregistrations(location = undefined) {
     let registrations = Object.values(this.registrations);
     return location ? registrations.filter(registration => registration.matcheslocation(location)) : registrations;
   }
