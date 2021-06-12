@@ -32,6 +32,8 @@ class RegistrationsAnalysis {
 
         console.log(chalk.bold(test.constructor.name));
 
+        if (test.init) { await test.init(); }
+
         for (let registration of registrations) {
 
           let result = await test.run(registration, options.fix);
@@ -48,7 +50,6 @@ class RegistrationsAnalysis {
             fixed++;
             console.log(chalk.blue(`${result.registration.email} FIXED`));
           }
-
         }
 
         console.log("");

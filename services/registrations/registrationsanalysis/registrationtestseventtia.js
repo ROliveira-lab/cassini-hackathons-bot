@@ -2,11 +2,28 @@ const { RegistrationTest } = require("./registrationtest");
 
 class EventtiaButNotOnWebsite extends RegistrationTest {
 
+  async init() {
+    this.eventtiagroup = await this.services.mailerlite.getgroupbyname("Eventtia registrations");
+  }
+
   async test(registration) {
     if (registration.attendee) {
       return registration.subscriber;
     }
     return true;
+  }
+
+  async fix(registration) {
+    let subscribergroups = await this.services.mailerlite.getgroupsofsubscriber(registration.attendee.email);
+    if (subscribergroups) {
+      for (let group of subscribergroups) {
+        await mailerlite.removesubscriberfromgroup(group.id, registration.attendee.email);
+      }
+      await sleep(10);
+    }
+    let subscriber = await this.services.mailerlite.addnewsubscribertogroup(this.eventtiagroup.id, registration.attendee);
+    registration.subscriber = subscriber
+    return subscriber
   }
 
 }

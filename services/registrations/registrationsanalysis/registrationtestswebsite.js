@@ -60,7 +60,8 @@ class WebsiteNoDiscordLink extends RegistrationTest {
 
   async fix(registration) {
     let properties = { discordurl: discordurls[registration.subscriber.location] };
-    let subscriber = await this.services.mailerlite.updatesubscriber(registration, properties);
+    let subscriber = await this.services.mailerlite.updatesubscriber(registration.email, properties);
+    registration.subscriber = subscriber
     return subscriber;
   }
 
@@ -82,7 +83,8 @@ class WebsiteWrongDiscordLinkForLocation extends RegistrationTest {
 
   async fix(registration) {
     let properties = { discordurl: discordurls[registration.subscriber.location] };
-    let subscriber = await this.services.mailerlite.updatesubscriber(registration, properties);
+    let subscriber = await this.services.mailerlite.updatesubscriber(registration.email, properties);
+    registration.subscriber = subscriber
     return subscriber;
   }
 
