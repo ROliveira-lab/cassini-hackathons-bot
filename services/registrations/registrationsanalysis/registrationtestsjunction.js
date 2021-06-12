@@ -62,7 +62,7 @@ class JunctionDifferentLocationAsOnWebsite extends RegistrationTest {
   }
 
   async fix(registration) {
-    console.log(`Update ${registration.email} junction location to ${registration.subscriber.location}`);
+    console.log(`Update ${registration.email} junction location from ${registration.participant.location} to ${registration.subscriber.location}`);
     return false;
   }
 

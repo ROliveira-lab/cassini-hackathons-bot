@@ -62,7 +62,7 @@ class EventtiaDifferentLocationAsOnWebsite extends RegistrationTest {
   }
 
   async fix(registration) {
-    console.log(`Update ${registration.email} eventtia location to ${registration.subscriber.location}`);
+    console.log(`Update ${registration.email} eventtia location from ${registration.attendee.location} to ${registration.subscriber.location}`);
     return false;
   }
 
