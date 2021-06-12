@@ -1,5 +1,5 @@
 const { RegistrationsAnalysis } = require("./registrationsanalysis");
-const { RegistrationTest } = require("./registrationstest");
+const { RegistrationTest } = require("./registrationtest");
 
 module.exports = {
   RegistrationsAnalysis,
