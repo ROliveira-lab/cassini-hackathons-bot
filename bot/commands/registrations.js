@@ -1,4 +1,3 @@
-const path = require("path");
 const moment = require("moment");
 const { MessageEmbed, APIMessage } = require("discord.js");
 
@@ -42,7 +41,7 @@ module.exports = (client) => {
 
     var location = await determinelocation(interaction);
 
-    let registrationsmanager = new RegistrationsManager();
+    let registrationsmanager = new RegistrationsManager({ subscribergroup: cassini.getshortname() });
 
     await registrationsmanager.loadall();
 
@@ -84,7 +83,7 @@ module.exports = (client) => {
 
     var email = interaction.data.options.find(option => option.name === "email").value;
 
-    let registrationsmanager = new RegistrationsManager();
+    let registrationsmanager = new RegistrationsManager({ subscribergroup: cassini.getshortname() });
 
     await registrationsmanager.loadone(email);
 
@@ -144,7 +143,7 @@ module.exports = (client) => {
 
     let user = await client.users.fetch(interaction.member.user.id);
 
-    let registrationsexporter = new RegistrationsExporter(new RegistrationsManager(), process.env.DATA_FOLDER);
+    let registrationsexporter = new RegistrationsExporter(new RegistrationsManager({ subscribergroup: cassini.getshortname() }), process.env.DATA_FOLDER);
 
     let tags = [user.username, user.id, moment().toISOString()];
 

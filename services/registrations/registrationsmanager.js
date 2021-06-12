@@ -5,7 +5,9 @@ const eventtia = require("../eventtia");
 
 class RegistrationsManager {
 
-  constructor() {
+  constructor(filteroptions) {
+    this.location = filteroptions.location;
+    this.subscribergroup = filteroptions.subscribergroup;
     this.registrations = {};
     this.loading = undefined;
   }
@@ -14,12 +16,12 @@ class RegistrationsManager {
     return email in this.registrations;
   }
 
-  getregistration(email, location = undefined) {
+  getregistration(email, location = this.location) {
     let registration = this.registrations[email];
     return location ? (registration.matcheslocation(location) ? registration : undefined) : registration;
   }
 
-  getallregistrations(location = undefined) {
+  getallregistrations(location = this.location) {
     let registrations = Object.values(this.registrations);
     return location ? registrations.filter(registration => registration.matcheslocation(location)) : registrations;
   }
@@ -52,84 +54,78 @@ class RegistrationsManager {
     registration.attendee = attendee;
   }
 
-
-  async loadall(location = undefined) {
+  async loadall() {
     if (!this.loading) {
       this.loading = Promise.all([
-        this.loadallsubscribers(location),
-        this.loadallparticipants(location),
-        this.loadallattendees(location)
+        this.loadallsubscribers(),
+        this.loadallparticipants(),
+        this.loadallattendees()
       ]);
     }
     return this.loading;
   }
 
-  async loadallsubscribers(location = undefined) {
-    let group = await mailerlite.getgroupbyname(cassini.getshortname());
-    let subscribers = await mailerlite.getsubscribersingroup(group.id, null);
+  async loadallsubscribers() {
+    if (this.subscribergroup) {
+      let group = await mailerlite.getgroupbyname(this.subscribergroup);
+      var subscribers = await mailerlite.getsubscribersingroup(group.id, null);
+    } else {
+      var subscribers = await mailerlite.getsubscribers(null);
+    }
     subscribers = subscribers.filter((subscriber) => subscriber.status != "unsubscribed");
-    subscribers = location ? subscribers.filter(r => r.location === location) : subscribers;
+    subscribers = this.location ? subscribers.filter((subscriber) => subscriber.location === this.location) : subscribers;
     for (let subscriber of subscribers) {
       this.addsubscriber(subscriber);
     }
   }
 
-  async loadallparticipants(location = undefined) {
+  async loadallparticipants() {
     let participants = await junction.getparticipants();
-    participants = location ? participants.filter(r => r.location === location) : participants;
+    participants = this.location ? participants.filter((participant) => participant.location === this.location) : participants;
     for (let participant of participants) {
       this.addparticipant(participant);
     }
   }
 
-  async loadallattendees(location = undefined) {
+  async loadallattendees() {
     let attendees = await eventtia.getattendees();
-    attendees = location ? attendees.filter(r => r.location === location) : attendees;
+    attendees = this.location ? attendees.filter((attendee) => attendee.location === this.location) : attendees;
     for (let attendee of attendees) {
       this.addattendee(attendee);
     }
   }
 
-  async loadone(email, location = undefined) {
+  async loadone(email) {
     await Promise.all([
-      this.loadonesubscriber(email, location),
-      this.loadoneparticipant(email, location),
-      this.loadoneattendee(email, location)
+      this.loadonesubscriber(email),
+      this.loadoneparticipant(email),
+      this.loadoneattendee(email)
     ]);
   }
 
-  async loadonesubscriber(email, location = undefined) {
+  async loadonesubscriber(email) {
     let subscriber = await mailerlite.getsubscriber(email);
     if (!subscriber) { return; }
-    let group = await mailerlite.getgroupbyname(cassini.getshortname());
-    let subscribergroups = await mailerlite.getgroupsofsubscriber(email);
-    if (!subscribergroups.find((subscribergroup) => subscribergroup.name === group.name)) { return; }
-    if (location && subscriber.location !== location) { return; }
+    if (this.subscribergroup) {
+      let subscribergroups = await mailerlite.getgroupsofsubscriber(email);
+      if (!subscribergroups.find((subscribergroup) => subscribergroup.name === this.subscribergroup)) { return; }
+    }
+    if (this.location && subscriber.location !== this.location) { return; }
     this.addsubscriber(subscriber);
   }
 
-  async loadoneparticipant(email, location = undefined) {
+  async loadoneparticipant(email) {
     let participant = await junction.getparticipantbyemail(email);
     if (!participant) { return undefined; }
-    if (location && attendee.location !== location) { return; }
+    if (this.location && attendee.location !== this.location) { return; }
     this.addparticipant(participant);
   }
 
-  async loadoneattendee(email, location = undefined) {
+  async loadoneattendee(email) {
     let attendee = await eventtia.getattendeebyemail(email);
     if (!attendee) { return; }
-    if (location && attendee.location !== location) { return; }
+    if (this.location && attendee.location !== this.location) { return; }
     this.addattendee(attendee);
-  }
-
-  async findregistration(email, location = undefined) {
-    let [subscriber, participant, attendee] = await Promise.all([
-      website.findregistration(email, location),
-      hackathonplatform.findregistration(email, location),
-      eventplatform.findregistration(email, location)
-    ]);
-    let registration = new Registration(email, { subscriber, participant, attendee });
-    return registration.exists ? this.addregistration(registration) : undefined
   }
 
 }
