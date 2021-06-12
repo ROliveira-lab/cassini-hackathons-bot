@@ -55,7 +55,7 @@ class EventtiaOnWebsiteButNotConsented extends RegistrationTest {
 class EventtiaDifferentLocationAsOnWebsite extends RegistrationTest {
 
   async test(registration) {
-    if (registration.attendee && registration.subscriber) {
+    if (registration.attendee && registration.attendee.isactive && registration.subscriber) {
       return registration.attendee.location === registration.subscriber.location;
     }
     return true;

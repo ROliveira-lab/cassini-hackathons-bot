@@ -55,7 +55,7 @@ class JunctionOnWebsiteButNotConsented extends RegistrationTest {
 class JunctionDifferentLocationAsOnWebsite extends RegistrationTest {
 
   async test(registration) {
-    if (registration.participant && registration.subscriber) {
+    if (registration.participant && registration.participant.isactive && registration.subscriber) {
       return registration.participant.location === registration.subscriber.location;
     }
     return true;
