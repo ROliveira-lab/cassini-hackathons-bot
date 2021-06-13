@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 function getname() {
   return "CASSINI Hackathons & Mentoring";
 }
@@ -124,6 +126,45 @@ function getvisitorlocation(rolenames) {
   return rolenames.map((role) => role.match(/^Visitor (\w.*)$/)).reduce((location, matchresult) => matchresult ? matchresult[1] : location, undefined);
 }
 
+function eligiblebirthdate() {
+  return moment().subtract(18, 'years');
+}
+
+function eligiblecountries() {
+  return [
+    "Austria",	
+    "Belgium",
+    "Bulgaria",
+    "Croatia",
+    "Cyprus",
+    "Czechia",	
+    "Denmark",
+    "Estonia",	
+    "Finland",
+    "France",
+    "Germany",
+    "Greece",
+    "Hungary",
+    "Iceland",	
+    "Ireland",
+    "Italy",
+    "Latvia",
+    "Lithuania",
+    "Luxembourg",
+    "Malta",
+    "Netherlands",
+    "Norway",
+    "Poland",
+    "Portugal",
+    "Romania",
+    "Slovakia",
+    "Slovenia",
+    "Spain",
+    "Sweden",
+    "Switzerland"
+  ]
+}
+
 module.exports = {
   getname,
   getshortname,
@@ -148,5 +189,7 @@ module.exports = {
   ishacker,
   gethackerlocation,
   isvisitor,
-  getvisitorlocation
+  getvisitorlocation,
+  eligiblebirthdate,
+  eligiblecountries
 }
