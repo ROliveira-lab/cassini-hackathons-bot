@@ -76,7 +76,7 @@ class RegistrationsManager {
     } else {
       var subscribers = await mailerlite.getsubscribers(null);
     }
-    subscribers = this.nounsubscribed ? subscribers.filter((subscriber) => subscriber.isunsubscribed) : subscribers;
+    subscribers = this.nounsubscribed ? subscribers.filter((subscriber) => !subscriber.isunsubscribed) : subscribers;
     subscribers = this.location ? subscribers.filter((subscriber) => subscriber.location === this.location) : subscribers;
     for (let subscriber of subscribers) {
       this.addsubscriber(subscriber);
