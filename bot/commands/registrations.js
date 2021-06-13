@@ -145,7 +145,9 @@ module.exports = (client) => {
 
     let registrationsexport = new RegistrationsExport(registrationsmanager, process.env.DATA_FOLDER);
 
-    let csv = await registrationsexport.exportascsv(location, [user.username, user.id, moment().toISOString()]);
+    let tags = [user.username, user.id, moment().toISOString()];
+
+    let csv = await registrationsexport.exportascsv(location, tags);
     
     let directmessagecontent = "Here is the registrations list you have requested. Download the file and store it safely. Always handle these personal data according to the applicable data protection rules and agreements. This message and its attachment will be deleted after 2 minutes."
     let directmessage = new APIMessage(user, { content: directmessagecontent, files: [ registrationsexport.filepath(location, tags) ] });
