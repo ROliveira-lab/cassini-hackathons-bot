@@ -105,15 +105,15 @@ class EventtiaRegisteredForNonEligibleActivities extends RegistrationTest {
     if (registration.attendee && registration.attendee.isactive) {
       let currentactivities = await this.services.eventtia.getattendeeactivities(registration.attendee.id);
       let eligibleactivities = this.activities.filter((activity) => activity.canregister(registration.attendee));
-      let forbiddenactivities = currentactivities.filter((ca) => !eligibleactivities.find((ea) => ea.id === ca.id));
-      this.cache.forbiddenactivities = forbiddenactivities;
-      return forbiddenactivities.length === 0;
+      let redundantactivities = currentactivities.filter((ca) => !eligibleactivities.find((ea) => ea.id === ca.id));
+      this.cache.redundantactivities = redundantactivities;
+      return redundantactivities.length === 0;
     }
     return true;
   }
 
   async fix(registration) {
-    for (let activity of this.cache.forbiddenactivities) {
+    for (let activity of this.cache.redundantactivities) {
       await this.services.eventtia.unregisterattendeeforactivity(registration.attendee, activity);
     }
   }
