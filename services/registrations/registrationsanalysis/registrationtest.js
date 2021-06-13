@@ -5,6 +5,7 @@ class RegistrationTest {
   constructor(services) {
     this.services = services;
     this.results = [];
+    this.cache = {}
   }
 
   async run(registration, fix = false) {

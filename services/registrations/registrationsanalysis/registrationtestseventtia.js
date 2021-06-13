@@ -68,9 +68,63 @@ class EventtiaDifferentLocationAsOnWebsite extends RegistrationTest {
 
 }
 
+class EventtiaNotRegisteredForEligibleActivities extends RegistrationTest {
+
+  async init() {
+    this.activities = await this.services.eventtia.getactivities();
+  }
+
+  async test(registration) {
+    if (registration.attendee && registration.attendee.isactive) {
+      let currentactivities = await this.services.eventtia.getattendeeactivities(registration.attendee.id);
+      let eligibleactivities = this.activities.filter((activity) => activity.canregister(registration.attendee));
+      let missingactivities = eligibleactivities.filter((ea) => !currentactivities.find((ca) => ca.id === ea.id));
+      this.cache.missingactivities = missingactivities;
+      return missingactivities.length === 0;
+    }
+    return true;
+  }
+
+  async fix(registration) {
+    for (let activity of this.cache.missingactivities) {
+      await this.services.eventtia.registerattendeeforactivity(registration.attendee, activity);
+      await sleep(1);
+    }
+    return true;
+  }
+
+}
+
+class EventtiaRegisteredForNonEligibleActivities extends RegistrationTest {
+
+  async init() {
+    this.activities = await this.services.eventtia.getactivities();
+  }
+
+  async test(registration) {
+    if (registration.attendee && registration.attendee.isactive) {
+      let currentactivities = await this.services.eventtia.getattendeeactivities(registration.attendee.id);
+      let eligibleactivities = this.activities.filter((activity) => activity.canregister(registration.attendee));
+      let forbiddenactivities = currentactivities.filter((ca) => !eligibleactivities.find((ea) => ea.id === ca.id));
+      this.cache.forbiddenactivities = forbiddenactivities;
+      return forbiddenactivities.length === 0;
+    }
+    return true;
+  }
+
+  async fix(registration) {
+    for (let activity of this.cache.forbiddenactivities) {
+      await this.services.eventtia.unregisterattendeeforactivity(registration.attendee, activity);
+    }
+  }
+
+}
+
 module.exports = {
   EventtiaButNotOnWebsite,
   EventtiaOnWebsiteButNotActive,
   EventtiaOnWebsiteButNotConsented,
-  EventtiaDifferentLocationAsOnWebsite
+  EventtiaDifferentLocationAsOnWebsite,
+  EventtiaNotRegisteredForEligibleActivities,
+  EventtiaRegisteredForNonEligibleActivities
 }
