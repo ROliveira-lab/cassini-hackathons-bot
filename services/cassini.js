@@ -41,6 +41,10 @@ function getlocations() {
   return alllocations;
 }
 
+function getnames() {
+  return alllocations.map((location) => gethackathonname(location));
+}
+
 function coreteammemberlabel() {
   return "Core Team Member";
 }
@@ -172,6 +176,7 @@ module.exports = {
   gethackathonlocation,
   defaulthackathonlocation,
   getlocations,
+  getnames,
   coreteammemberlabel,
   localorganiserlabel,
   crewmemberlabel,
