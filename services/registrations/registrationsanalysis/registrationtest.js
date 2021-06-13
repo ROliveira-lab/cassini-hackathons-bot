@@ -8,6 +8,22 @@ class RegistrationTest {
     this.cache = {}
   }
 
+  get total() {
+    return this.results.length;
+  }
+
+  get passed() {
+    return this.results.filter((result) => result.pass).length;
+  }
+
+  get failed() {
+    return this.results.filter((result) => !result.pass && !result.fixed).length;
+  }
+
+  get fixed() {
+    return this.results.filter((result) => !result.pass && result.fixed).length;
+  }
+
   async run(registration, fix = false) {
     var pass = await this.test(registration);
     if (!pass && fix && this.fix) {

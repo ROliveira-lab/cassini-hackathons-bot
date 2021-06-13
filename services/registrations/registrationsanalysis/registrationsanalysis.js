@@ -26,10 +26,6 @@ class RegistrationsAnalysis {
 
       for (let test of tests) {
 
-        let passed = 0;
-        let fixed = 0;
-        let failed = 0;
-
         console.log(chalk.bold(test.constructor.name));
 
         if (test.init) { await test.init(); }
@@ -38,16 +34,11 @@ class RegistrationsAnalysis {
 
           let result = await test.run(registration, options.fix);
 
-          if (result.pass) {
-            passed++;
-            if (options.showall) {
-              console.log(chalk.green(`${result.registration.email} PASS`));
-            }
+          if (result.pass && options.showall) {
+            console.log(chalk.green(`${result.registration.email} PASS`));
           } else if (!result.pass && !result.fixed) {
-            failed++;
             console.log(chalk.red(`${result.registration.email} FAIL`));
           } else if (!result.pass && result.fixed) {
-            fixed++;
             console.log(chalk.blue(`${result.registration.email} FIXED`));
           }
         
@@ -55,10 +46,10 @@ class RegistrationsAnalysis {
 
         console.log("");
 
-        console.log(`${passed} registrations passed`);
-        console.log(`${failed} registrations failed`);
+        console.log(`${test.passed}/${test.total} registrations passed`);
+        console.log(`${test.failed}/${test.total} registrations failed`);
         if (options.fix) {
-          console.log(`${fixed} registrations fixed`);
+          console.log(`${test.fixed}/${test.total} registrations fixed`);
         }
 
         console.log("");
