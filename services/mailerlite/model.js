@@ -64,6 +64,10 @@ class Subscriber {
     return this.consent ? this.consent.includes("my participation in the hackathon") : false;
   }
 
+  checkprovisionaleligibity() {
+    return !this.countryofip || (this.countryofip && cassini.eligiblecountries().includes(this.countryofip));
+  }
+
   export() {
     return {
       firstname: this.firstname,

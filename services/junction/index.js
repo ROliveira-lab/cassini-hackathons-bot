@@ -86,9 +86,15 @@ async function getparticipantbyemail(participantemail, slug = defaultevent) {
   return participants.find((participant) => participant.email === participantemail);
 }
 
+async function updateparticipant(participant, properties, slug = defaultevent) {
+  let response = await junctionapi.patch(`/registrations/${slug}/${participant.id}`, properties).catch((error) => console.error(error.message));
+  return response ? new Participant(response.data) : undefined;
+}
+
 module.exports = {
   getevent,
   getparticipants,
   getparticipantbyid,
-  getparticipantbyemail
+  getparticipantbyemail,
+  updateparticipant
 }

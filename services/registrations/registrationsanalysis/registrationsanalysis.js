@@ -77,6 +77,18 @@ class RegistrationsAnalysis {
     return tests;
   }
 
+
+  listavailabletests() {
+    console.log("REGISTRATIONS ANALYSIS")
+    console.log("");
+    console.log("Available tests:");
+    let testclasses = importtests();
+    for (let name in testclasses) {
+      console.log(`- ${name}`);
+    }
+    console.log("");
+  }
+
 }
 
 function importtests() {

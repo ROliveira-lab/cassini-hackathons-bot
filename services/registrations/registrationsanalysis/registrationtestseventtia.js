@@ -30,11 +30,35 @@ class EventtiaButNotOnWebsite extends RegistrationTest {
 
 }
 
-class EventtiaOnWebsiteButNotActive extends RegistrationTest {
+class EventtiaOnWebsiteButUnconfirmed extends RegistrationTest {
+
+  async init() {
+    let group = await this.services.mailerlite.getgroupbyname(this.services.cassini.getshortname());
+    let subscribers = await this.services.mailerlite.getsubscribersingroup(group.id, null);
+    this.selectedsubscriberids = subscribers.map((subscriber) => subscriber.id);
+  }
 
   async test(registration) {
-    if (registration.attendee && registration.subscriber) {
-      return registration.subscriber.isactive;
+    if (registration.attendee && registration.subscriber && this.selectedsubscriberids.includes(registration.subscriber.id)) {
+      return !registration.subscriber.isunconfirmed;
+    }
+    return true;
+  }
+
+}
+
+
+class EventtiaOnWebsiteButUnsubscribed extends RegistrationTest {
+
+  async init() {
+    let group = await this.services.mailerlite.getgroupbyname(this.services.cassini.getshortname());
+    let subscribers = await this.services.mailerlite.getsubscribersingroup(group.id, null);
+    this.selectedsubscriberids = subscribers.map((subscriber) => subscriber.id);
+  }
+
+  async test(registration) {
+    if (registration.attendee && registration.subscriber && this.selectedsubscriberids.includes(registration.subscriber.id)) {
+      return !registration.subscriber.isunsubscribed;
     }
     return true;
   }
@@ -43,8 +67,14 @@ class EventtiaOnWebsiteButNotActive extends RegistrationTest {
 
 class EventtiaOnWebsiteButNotConsented extends RegistrationTest {
 
+  async init() {
+    let group = await this.services.mailerlite.getgroupbyname(this.services.cassini.getshortname());
+    let subscribers = await this.services.mailerlite.getsubscribersingroup(group.id, null);
+    this.selectedsubscriberids = subscribers.map((subscriber) => subscriber.id);
+  }
+
   async test(registration) {
-    if (registration.attendee && registration.subscriber) {
+    if (registration.attendee && registration.subscriber && this.selectedsubscriberids.includes(registration.subscriber.id)) {
       return registration.subscriber.isconsented;
     }
     return true;
@@ -122,7 +152,8 @@ class EventtiaRegisteredForNonEligibleActivities extends RegistrationTest {
 
 module.exports = {
   EventtiaButNotOnWebsite,
-  EventtiaOnWebsiteButNotActive,
+  EventtiaOnWebsiteButUnconfirmed,
+  EventtiaOnWebsiteButUnsubscribed,
   EventtiaOnWebsiteButNotConsented,
   EventtiaDifferentLocationAsOnWebsite,
   EventtiaNotRegisteredForEligibleActivities,

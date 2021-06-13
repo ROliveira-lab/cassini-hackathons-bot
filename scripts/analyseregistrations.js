@@ -14,8 +14,22 @@ async function run(names, options) {
 
 }
 
+function list() {
+
+  const { RegistrationsAnalysis } = require("../services/registrations/registrationsanalysis");
+
+  const registrationsanalysis = new RegistrationsAnalysis(null);
+
+  registrationsanalysis.listavailabletests();
+
+}
+
 const minimist = require('minimist');
 
 let argv = minimist(process.argv.slice(2), { boolean: true })
 
-run(argv._, argv);
+if (argv.list) {
+  list();
+} else {
+  run(argv._, argv);
+}
